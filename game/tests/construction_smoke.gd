@@ -35,7 +35,13 @@ func _run_checks() -> void:
 		for child in site.stage_groups[3].get_children():
 			if str(child.name).begins_with("Quaternius_"):
 				imported_walls += 1
-		assert(imported_walls == 12, "Должны загружаться 12 модульных стен")
+		if imported_walls != 12:
+			var actual_names := PackedStringArray()
+			for child in site.stage_groups[3].get_children():
+				actual_names.append(str(child.name))
+			push_error("Ожидалось 12 модульных стен, загружено %d; сцена содержит: %s" % [imported_walls, ", ".join(actual_names)])
+			quit(1)
+			return
 	if site._has_module("Roof_RoundTiles_6x6"):
 		assert(site.stage_groups[4].get_child_count() == 1, "Должна загружаться готовая черепичная крыша")
 	for style in ["cottage", "barn", "alchemist"]:
