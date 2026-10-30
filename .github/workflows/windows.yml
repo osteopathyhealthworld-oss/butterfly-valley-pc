@@ -21,13 +21,14 @@ jobs:
       - name: Check resource manifest and download rules
         run: |
           python3 -m unittest discover -s scripts -p 'test_*.py'
-          python3 -m compileall -q scripts
+          python3 -m compileall -q scripts game/prepare_audio_assets.py
+          python3 game/prepare_audio_assets.py --check
           git diff --check
 
   godot-construction:
     name: Verify modular houses in Godot
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     container:
       image: barichello/godot-ci:4.4.1
     steps:
@@ -37,15 +38,18 @@ jobs:
       - name: Install download utility
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends curl ca-certificates
+          apt-get install -y --no-install-recommends curl ca-certificates python3
       - name: Fetch the exact CC0 village building models
         run: bash game/prepare-village-assets.sh
+      - name: Fetch pinned CC0 nature sounds and music
+        run: python3 game/prepare_audio_assets.py --fetch
       - name: Import the public project and validate building scenes
         shell: bash
         run: |
           godot --version
           godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/construction_smoke.gd
+          godot --headless --rendering-method gl_compatibility --path game -s res://tests/soundscape_smoke.gd
 
 # Full Godot import and Windows export need the character models kept in the
 # companion PRIVATE_REPOSITORY. Its manual workflow publishes the playable ZIP.
