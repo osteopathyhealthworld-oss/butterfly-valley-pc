@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "repository": "GamesNotDeveloped/godot-forest-demo",
+  "revision": "623212ffeb4efbf4c95323a4a6a57e726be4f6e9",
+  "license": "CC-BY-4.0",
+  "artwork_credit": "Pine Tree by evolveduk — https://sketchfab.com/3d-models/pine-tree-d45218a3fab349e5b1de040f29e7b6f9",
+  "files": [
+    {
+      "source": "objects/pine-tree-1/license.txt",
+      "destination": "game/assets/forest/pine-tree-1/license.txt",
+      "bytes": 660,
+      "git_sha1": "14304c0259c580cee805aef17e77f3b366925075"
+    },
+    {
+      "source": "objects/pine-tree-1/scene.bin",
+      "destination": "game/assets/forest/pine-tree-1/scene.bin",
+      "bytes": 259620,
+      "git_sha1": "ea06c656d685a8c5170f481ac187daa7b6d52121"
+    },
+    {
+      "source": "objects/pine-tree-1/scene.gltf",
+      "destination": "game/assets/forest/pine-tree-1/scene.gltf",
+      "bytes": 7396,
+      "git_sha1": "12ee87900a295b8feec813d57be025e2ba56be81"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_0Mat_baseColor.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_0Mat_baseColor.png",
+      "bytes": 712347,
+      "git_sha1": "308991c31ca7c3091f4c3a1ad321fd7bba758577"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_0Mat_metallicRoughness.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_0Mat_metallicRoughness.png",
+      "bytes": 247292,
+      "git_sha1": "068595cf4a93835d3a545ca0ff5d2f07300b60be"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_0Mat_normal.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_0Mat_normal.png",
+      "bytes": 919457,
+      "git_sha1": "0ff030b23be73ba295d780223455d3954b18670b"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_1Mat_baseColor.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_1Mat_baseColor.png",
+      "bytes": 647939,
+      "git_sha1": "4e1202f4209752acd6dc046698c70a5f665e23ed"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_1Mat_metallicRoughness.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_1Mat_metallicRoughness.png",
+      "bytes": 289108,
+      "git_sha1": "d4808f3652f909681445f22394b4d9cbad260c63"
+    },
+    {
+      "source": "objects/pine-tree-1/textures/Tree_1Mat_normal.png",
+      "destination": "game/assets/forest/pine-tree-1/textures/Tree_1Mat_normal.png",
+      "bytes": 1174693,
+      "git_sha1": "9241bf0ae01d65b8b815160467f7a5fb6c01286f"
+    }
+  ]
+}

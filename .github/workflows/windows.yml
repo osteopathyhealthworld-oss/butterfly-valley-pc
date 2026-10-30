@@ -21,7 +21,8 @@ jobs:
       - name: Check resource manifest and download rules
         run: |
           python3 -m unittest discover -s scripts -p 'test_*.py'
-          python3 -m compileall -q scripts game/prepare_audio_assets.py
+          python3 -m compileall -q scripts game/prepare_audio_assets.py game/prepare_forest_assets.py
+          python3 game/prepare_forest_assets.py
           python3 game/prepare_audio_assets.py --check
           git diff --check
 
@@ -41,6 +42,8 @@ jobs:
           apt-get install -y --no-install-recommends curl ca-certificates python3
       - name: Fetch the exact CC0 village building models
         run: bash game/prepare-village-assets.sh
+      - name: Fetch pinned CC BY 4.0 forest PBR model
+        run: python3 game/prepare_forest_assets.py --fetch
       - name: Fetch pinned CC0 nature sounds and music
         run: python3 game/prepare_audio_assets.py --fetch
       - name: Import the public project and validate building scenes
@@ -50,6 +53,7 @@ jobs:
           godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/construction_smoke.gd
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/terrain_canopy_smoke.gd
+          godot --headless --rendering-method gl_compatibility --path game -s res://tests/forest_art_smoke.gd
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/soundscape_smoke.gd
 
 # Full Godot import and Windows export need the character models kept in the

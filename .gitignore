@@ -18,3 +18,6 @@ game/assets/paki-shared.json
 
 # Fetched during the build from the pinned CC0 Quaternius source.
 game/assets/buildings/village/
+
+# Pinned CC BY 4.0 PBR forest art; fetched and checked during import/build.
+game/assets/forest/
