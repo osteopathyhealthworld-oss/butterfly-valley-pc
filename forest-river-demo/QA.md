@@ -12,6 +12,9 @@ Tested with Godot 4.6 stable (Linux, headless):
 - Riverbed height strictly below the water surface.
 - The old cottage and well relocated outside the riverbank footprint.
 - Tree masks exclude the river, cottage and well areas.
+- Forest scatter actually populates the scene (4,839 tree-related mesh
+  instances in the test run, counting mesh parts and LOD variants rather
+  than unique trees); the player area generated 6,657 grass blades.
 - Grass generation performed on a background thread, with every checked
   blade matching the modified terrain height within 1 millimeter.
 - Game data exported as a `.pck`, and that `.pck` started independently from

@@ -43,6 +43,11 @@ func _run() -> void:
 			quit(6)
 			return
 	var trees := instance.get_node("Trees")
+	var tree_mesh_instances := _count_multimesh_instances(trees)
+	if tree_mesh_instances < 100:
+		push_error("Forest vegetation failed to populate: only %d mesh instances" % tree_mesh_instances)
+		quit(11)
+		return
 	var tree_mask: Image = trees.mask_texture.get_image()
 	for location in [Vector2(27.0, -17.0), Vector2(25.0, -4.0), Vector2(RiverTerrainScript.center_at(0.0), 0.0)]:
 		var uv: Vector2 = Vector2(location.x / 100.0 + 0.5, location.y / 100.0 + 0.5)
@@ -96,5 +101,28 @@ func _run() -> void:
 			push_error("Grass sits above or below the riverbank")
 			quit(8)
 			return
-	print("FOREST_RIVER_SMOKE_OK river_vertices=", river.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX].size(), " rocks=", stones.multimesh.instance_count, " center_height=", center, " outer_height=", outside)
+	var visible_grass := 0
+	for attempt in range(120):
+		var grass_node := terrain.get_node_or_null("__terrain_grass") as MultiMeshInstance3D
+		if grass_node != null and grass_node.multimesh != null:
+			visible_grass = grass_node.multimesh.instance_count
+			if visible_grass > 0:
+				break
+		await process_frame
+	if visible_grass == 0:
+		push_error("No runtime grass mesh was generated near the player")
+		quit(12)
+		return
+	print("FOREST_RIVER_SMOKE_OK river_vertices=", river.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX].size(), " rocks=", stones.multimesh.instance_count, " forest_meshes=", tree_mesh_instances, " grass_blades=", visible_grass, " center_height=", center, " outer_height=", outside)
 	quit(0)
+
+
+func _count_multimesh_instances(node: Node) -> int:
+	var count := 0
+	if node is MultiMeshInstance3D:
+		var mesh_node: MultiMeshInstance3D = node
+		if mesh_node.multimesh != null:
+			count += mesh_node.multimesh.instance_count
+	for child in node.get_children(true):
+		count += _count_multimesh_instances(child)
+	return count
