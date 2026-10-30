@@ -1,0 +1,29 @@
+{
+  "author": "Kenney",
+  "pack": "Survival Kit 2.0",
+  "model": "tool-axe",
+  "license": "CC0-1.0",
+  "page": "https://kenney.nl/assets/survival-kit",
+  "download": "https://opengameart.org/sites/default/files/kenney_survival-kit.zip",
+  "authorUpload": "https://opengameart.org/content/survival-kit",
+  "archiveSha256": "c3586341b5932c87eb43d75d915434f47daed168b17ed36a03e8ca9977c7443e",
+  "sourceSha256": "de5c6cc51cdb5bcfad8bd7128b7ff0e37a34e6f4f8deddec82bb8634c25cc20d",
+  "textureSha256": "6ca023be9f12e8c2358fcf94320c8a894b4c05a3dd0bad1f5c268312053caca1",
+  "sha256": "e9debdd55096213ea67ccbdb3cddc9613ca596cebf8d6b22b3dfcfe25522b2d4",
+  "bytes": 16252,
+  "triangles": 84,
+  "changes": "Original geometry, UVs and palette retained; external PNG embedded in GLB. Runtime applies grip offset and scale.",
+  "sourceBounds": {
+    "min": [
+      -0.07331644,
+      0,
+      -0.0154635
+    ],
+    "max": [
+      0.041169375,
+      0.25599998,
+      0.0154635
+    ]
+  },
+  "gripFraction": 0.37
+}
