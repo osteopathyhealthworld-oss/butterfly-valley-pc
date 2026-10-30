@@ -34,6 +34,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install download utility
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends curl ca-certificates
+      - name: Fetch the exact CC0 village building models
+        run: bash game/prepare-village-assets.sh
       - name: Import the public project and validate building scenes
         shell: bash
         run: |

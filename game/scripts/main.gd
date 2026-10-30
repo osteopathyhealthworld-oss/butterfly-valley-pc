@@ -1459,9 +1459,9 @@ func _update_weather(delta: float) -> void:
 	elif weather_mode != "auto" and weather_mode != "chapter":
 		raining = weather_mode == "rain"
 	var night := bool(state["night"])
-	var weather := chapter.sim.weather() if chapter != null else ("storm" if raining else "clear")
-	var mist := weather == "mist"
-	var cloudy := weather in ["overcast", "storm", "mist"]
+	var weather: String = str(chapter.sim.weather()) if chapter != null else ("storm" if raining else "clear")
+	var mist: bool = weather == "mist"
+	var cloudy: bool = weather in ["overcast", "storm", "mist"]
 	var cloud_target := 1.0 if weather == "storm" else (0.76 if mist else (0.58 if cloudy else 0.0))
 	# Light and cloud cover fade between weather states, rather than jumping.
 	_cloud_mix = move_toward(_cloud_mix, cloud_target, delta * 0.33)

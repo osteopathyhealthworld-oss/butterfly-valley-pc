@@ -116,7 +116,8 @@ func _module(step: int, model_name: String, at: Vector3, yaw: float = 0.0, scale
 	var model := scene.instantiate() as Node3D
 	if model == null:
 		return false
-	model.name = "Quaternius_" + model_name
+	# Godot gives duplicates generic @Node3D@ names; keep every piece identifiable.
+	model.name = "Quaternius_%s_%d" % [model_name, stage_groups[step].get_child_count()]
 	model.position = at
 	model.rotation.y = yaw
 	model.scale = scale_factor
