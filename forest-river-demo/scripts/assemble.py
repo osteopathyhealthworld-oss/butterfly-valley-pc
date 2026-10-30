@@ -44,8 +44,11 @@ def assemble(source: Path, output: Path) -> None:
     scene = re.sub(r'(\[ext_resource type="Script") uid="uid://[^"]+"(?= path="res://demo/)',
                    r'\1', scene)
     scene = re.sub(r'^\[ext_resource[^\n]*res://music/[^\n]*\n', '', scene, flags=re.M)
+    scene = re.sub(r'^\[ext_resource[^\n]*res://addons/debug_menu/debug_menu.tscn[^\n]*\n',
+                   '', scene, flags=re.M)
     scene = re.sub(r'^\[node name="AudioStreamPlayer"[^\n]*\n(?:(?!\[node ).*\n)*',
                    '', scene, flags=re.M)
+    scene = re.sub(r'^\[node name="CanvasLayer"[^\n]*\n', '', scene, flags=re.M)
     scene = scene.replace('subdivisions_x = 160', 'subdivisions_x = 256')
     scene = scene.replace('subdivisions_z = 160', 'subdivisions_z = 256')
     scene = re.sub(r'^\[gd_scene[^\n]*', '[gd_scene format=3]', scene, count=1, flags=re.M)

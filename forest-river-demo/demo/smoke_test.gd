@@ -36,5 +36,11 @@ func _run() -> void:
 		push_error("Riverbed should lie below water surface")
 		quit(5)
 		return
+	for prop_name in ["OldHouse", "OldWell"]:
+		var prop: Node3D = instance.get_node_or_null(prop_name)
+		if prop == null or absf(prop.position.x - RiverTerrainScript.center_at(prop.position.z)) < RiverTerrainScript.BANK_OUTER:
+			push_error("The cottage or well intersects the river: " + prop_name)
+			quit(6)
+			return
 	print("FOREST_RIVER_SMOKE_OK river_vertices=", river.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX].size(), " rocks=", stones.multimesh.instance_count, " center_height=", center, " outer_height=", outside)
 	quit(0)

@@ -8,15 +8,25 @@ const WATER_CROSS_SEGMENTS := 8
 
 @onready var terrain: Node3D = $Terrain
 @onready var player: Node3D = $UP_FPSController_Prefab
+var _fps_label: Label
+var _fps_elapsed := 0.0
 
 func _ready() -> void:
 	_install_river_masks()
 	_build_river()
 	_build_shore_details()
+	_position_props()
 	_position_player()
 	_add_hud()
 	if $WorldEnvironment.environment != null:
 		$WorldEnvironment.environment.volumetric_fog_enabled = true
+
+
+func _process(delta: float) -> void:
+	_fps_elapsed += delta
+	if _fps_label != null and _fps_elapsed > 0.6:
+		_fps_elapsed = 0.0
+		_fps_label.text = "FPS: %d  |  Forward+ / PBR / Volumetric fog" % Engine.get_frames_per_second()
 
 
 func _river_distance(x: float, z: float) -> float:
@@ -145,6 +155,22 @@ func _position_player() -> void:
 	player.rotation.y = PI * 0.5
 
 
+func _position_props() -> void:
+	# Original forest has a cottage and well at x≈1: exactly inside our river.
+	# Relocate both to dry ground, retaining their authored models and rotation.
+	var placements := {
+		"OldHouse": Vector2(27.0, -17.0),
+		"OldWell": Vector2(25.0, -4.0),
+	}
+	for prop_name in placements:
+		var prop: Node3D = get_node_or_null(prop_name)
+		if prop == null:
+			continue
+		var location: Vector2 = placements[prop_name]
+		var ground: float = terrain.call("_sample_height", location.x, location.y)
+		prop.position = Vector3(location.x, ground, location.y)
+
+
 func _add_hud() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "RiverDemoHUD"
@@ -159,3 +185,8 @@ func _add_hud() -> void:
 	label.add_theme_constant_override("shadow_offset_x", 1)
 	label.add_theme_constant_override("shadow_offset_y", 2)
 	layer.add_child(label)
+	_fps_label = Label.new()
+	_fps_label.position = Vector2(22.0, 45.0)
+	_fps_label.add_theme_font_size_override("font_size", 14)
+	_fps_label.add_theme_color_override("font_color", Color(0.80, 0.94, 0.85))
+	layer.add_child(_fps_label)
