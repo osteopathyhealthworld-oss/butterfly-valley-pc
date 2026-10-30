@@ -54,9 +54,9 @@ func _run_checks() -> void:
 		if style == "cottage" and house._has_module("Roof_RoundTiles_4x4"):
 			assert(house.stage_groups[5].get_child_count() >= 1)
 		if style == "barn" and house._has_module("Roof_RoundTiles_6x4"):
-			assert((house.stage_groups[4].get_child(0) as Node3D).name == "Quaternius_Roof_RoundTiles_6x4")
+			assert((house.stage_groups[4].get_child(0) as Node3D).name.begins_with("Quaternius_Roof_RoundTiles_6x4_"))
 		if style == "alchemist" and house._has_module("Roof_RoundTiles_8x8"):
-			assert((house.stage_groups[4].get_child(0) as Node3D).name == "Quaternius_Roof_RoundTiles_8x8")
+			assert((house.stage_groups[4].get_child(0) as Node3D).name.begins_with("Quaternius_Roof_RoundTiles_8x8_"))
 		house.queue_free()
 
 	var world = load("res://scripts/world.gd").new()
