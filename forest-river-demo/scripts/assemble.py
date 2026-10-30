@@ -50,6 +50,9 @@ def assemble(source: Path, output: Path) -> None:
     scene = scene.replace('subdivisions_z = 160', 'subdivisions_z = 256')
     scene = re.sub(r'^\[gd_scene[^\n]*', '[gd_scene format=3]', scene, count=1, flags=re.M)
     (output / "levels/forest_river_demo.tscn").write_text(scene, encoding="utf-8")
+    # This duplicate original scene still refers to the intentionally removed
+    # soundtrack; keeping it would break all-resources export.
+    (output / "levels/test_biomes.tscn").unlink()
 
     project_path = output / "project.godot"
     project = project_path.read_text(encoding="utf-8")
@@ -65,6 +68,7 @@ def assemble(source: Path, output: Path) -> None:
     shutil.copy2(HERE / "windows_export_presets.cfg", output / "export_presets.cfg")
     shutil.copy2(HERE / "CREDITS.md", output / "CREDITS.md")
     shutil.copy2(HERE / "README.md", output / "FOREST_RIVER_README.md")
+    shutil.copy2(HERE / "LICENSE-DEMO-MIT", output / "LICENSE-DEMO-MIT")
     print(f"Godot project ready: {output}")
 
 
