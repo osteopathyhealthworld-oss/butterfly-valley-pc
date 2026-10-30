@@ -48,9 +48,9 @@ def destination(entry):
 
 def diagnose_asset_404(manifest, token):
     """Check access without logging any credentials or private repository paths."""
-    def probe(suffix):
+    def probe(url):
         request = Request(
-            "https://api.github.com/repos/{}{}".format(manifest["repository"], suffix),
+            url,
             headers={
                 "Authorization": "Bearer " + token,
                 "Accept": "application/vnd.github+json",
@@ -67,12 +67,19 @@ def diagnose_asset_404(manifest, token):
         except URLError:
             return None
 
-    repository_status = probe("")
+    identity_status = probe("https://api.github.com/user")
+    if identity_status == 401:
+        return "Сохранённый токен сборки не прошёл авторизацию (HTTP 401). Проверьте VALLEY_ASSETS_TOKEN."
+    if identity_status != 200:
+        return "Не удалось проверить авторизацию токена (HTTP {}).".format(identity_status)
+
+    repository_status = probe("https://api.github.com/repos/{}".format(manifest["repository"]))
     if repository_status == 404:
         return "Токен не видит хранилище ресурсов либо указано неверное имя репозитория."
     if repository_status != 200:
         return "Не удалось проверить доступ к хранилищу (HTTP {}).".format(repository_status)
-    revision_status = probe("/git/commits/" + manifest["revision"])
+    revision_status = probe("https://api.github.com/repos/{}/git/commits/{}".format(
+        manifest["repository"], manifest["revision"]))
     if revision_status == 404:
         return "Хранилище доступно, но закреплённый коммит отсутствует."
     if revision_status != 200:
