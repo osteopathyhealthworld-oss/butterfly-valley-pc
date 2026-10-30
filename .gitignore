@@ -5,4 +5,16 @@ private-assets/
 /scripts/character-assets.json
 __pycache__/
 *.pyc
-game/assets/
+
+# User-provided character source and derived animation clips stay private.
+game/assets/paki-hero.glb
+game/assets/paki-hero.json
+game/assets/bruno-builder.glb
+game/assets/bruno-builder.json
+game/assets/paki-farming.glb
+game/assets/paki-farming.json
+game/assets/paki-shared.glb
+game/assets/paki-shared.json
+
+# Fetched during the build from the pinned CC0 Quaternius source.
+game/assets/buildings/village/
