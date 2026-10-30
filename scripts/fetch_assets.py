@@ -46,6 +46,40 @@ def destination(entry):
     return path
 
 
+def diagnose_asset_404(manifest, token):
+    """Check access without logging any credentials or private repository paths."""
+    def probe(suffix):
+        request = Request(
+            "https://api.github.com/repos/{}{}".format(manifest["repository"], suffix),
+            headers={
+                "Authorization": "Bearer " + token,
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "ButterflyValley-Windows-Build",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        )
+        try:
+            with urlopen(request, timeout=20) as response:
+                response.read(1)
+            return 200
+        except HTTPError as error:
+            return error.code
+        except URLError:
+            return None
+
+    repository_status = probe("")
+    if repository_status == 404:
+        return "Токен не видит хранилище ресурсов либо указано неверное имя репозитория."
+    if repository_status != 200:
+        return "Не удалось проверить доступ к хранилищу (HTTP {}).".format(repository_status)
+    revision_status = probe("/git/commits/" + manifest["revision"])
+    if revision_status == 404:
+        return "Хранилище доступно, но закреплённый коммит отсутствует."
+    if revision_status != 200:
+        return "Хранилище доступно; проверить закреплённый коммит не удалось (HTTP {}).".format(revision_status)
+    return "Хранилище и закреплённый коммит доступны; проверьте путь к отсутствующему файлу в конфигурации ресурсов."
+
+
 def fetch_one(entry, manifest, token):
     path = destination(entry)
     url = "https://api.github.com/repos/{}/contents/{}?ref={}".format(
@@ -60,7 +94,8 @@ def fetch_one(entry, manifest, token):
         with urlopen(request, timeout=120) as response:
             data = response.read(entry["bytes"] + 1)
     except HTTPError as error:
-        raise SystemExit("Ресурс {}: HTTP {}. Проверьте Contents: Read и срок токена.".format(path.name, error.code)) from None
+        diagnosis = " " + diagnose_asset_404(manifest, token) if error.code == 404 else ""
+        raise SystemExit("Ресурс {}: HTTP {}.{}".format(path.name, error.code, diagnosis)) from None
     except URLError:
         raise SystemExit("Сетевая ошибка при чтении " + path.name) from None
     if not digest_matches(data, entry):
