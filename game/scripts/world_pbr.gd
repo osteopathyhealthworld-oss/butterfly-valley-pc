@@ -15,6 +15,9 @@ const ATLAS_CANOPY := ["q-birch-1", "q-birch-2", "q-common-tree", "q-pine-1", "q
 const ATLAS_UNDERGROWTH := ["q-fern", "q-clover", "q-flowering-bush", "q-blue-flowers", "q-white-flowers", "q-bush", "q-tall-grass", "q-short-grass", "q-wispy-grass"]
 const ATLAS_STONES := ["q-rock-1", "q-rock-2", "q-pebble-1", "q-stepping-stone"]
 const ATLAS_FILES := {"canopy": ATLAS_CANOPY, "undergrowth": ATLAS_UNDERGROWTH, "river-stones": ATLAS_STONES}
+# A testable PBR tree from the CC BY 4.0 procedural forest demo. Downloaded
+# with a pinned manifest; the current Quaternius trees remain safe fallbacks.
+const EXTERNAL_TREES := {"pbr-pine": "res://assets/forest/pine-tree-1/scene.gltf"}
 const TREE_TYPES := ["tree-oak", "tree-detailed", "tree-pinerounda", "tree-pinesmalla", "tree-fat", "tree-pinetalla", "tree-oak-dark", "tree-detailed-dark", "tree-pinetallb", "tree-tall", "tree-small", "tree-default"]
 const FOLIAGE_TYPES := ["grass", "grass-large", "grass-leafs", "flower-purplea", "flower-purpleb", "flower-yellowa", "flower-yellowb", "flower-reda", "flower-redb", "mushroom-redgroup", "mushroom-tangroup", "plant-bushlarge", "plant-bushdetailed", "plant-flattall", "plant-flatshort", "hanging-moss"]
 const ROCK_TYPES := ["rock-largea", "rock-largeb", "rock-smalla", "rock-smallb", "rock-talla"]
@@ -203,6 +206,36 @@ func _load_stylized_atlases() -> void:
 				_bake_atlas_model(id)
 	if not _atlas_sources.has("q-oak-wide") or not _atlas_sources.has("q-fern"):
 		push_warning("Quaternius atlas models were imported without their named children.")
+	_load_external_forest_models()
+
+func _load_external_forest_models() -> void:
+	# Preserve the original glTF PBR materials, including normal maps, alpha
+	# cutouts and double-sided foliage. Our Quaternius wind shader discards some
+	# of these channels, so it must not replace the new tree's materials.
+	if OS.has_feature("web"):
+		return
+	for id in EXTERNAL_TREES:
+		var path: String = EXTERNAL_TREES[id]
+		if not ResourceLoader.exists(path):
+			continue
+		var packed := load(path) as PackedScene
+		if packed == null:
+			push_warning("Failed to import CC BY forest model: " + path)
+			continue
+		var imported := packed.instantiate() as Node3D
+		if imported == null:
+			continue
+		var fitted := Fitting.wrap_to_height(imported, 1.0)
+		var surfaces: Dictionary = {}
+		_collect_atlas_surfaces(fitted, Transform3D.IDENTITY, surfaces, false)
+		var combined := ArrayMesh.new()
+		for builder in surfaces.values():
+			(builder as SurfaceTool).commit(combined)
+		fitted.free()
+		if combined.get_surface_count() >= 2:
+			_mesh_library[id] = combined
+		else:
+			push_warning("Incomplete CC BY forest model (trunk/leaves): " + path)
 
 func _bake_atlas_model(id: String) -> void:
 	var source: Dictionary = _atlas_sources[id]
@@ -220,7 +253,7 @@ func _bake_atlas_model(id: String) -> void:
 		_mesh_library[id] = result
 		_atlas_batched[id] = true
 
-func _collect_atlas_surfaces(node: Node, parent_transform: Transform3D, tools: Dictionary) -> void:
+func _collect_atlas_surfaces(node: Node, parent_transform: Transform3D, tools: Dictionary, apply_wind: bool = true) -> void:
 	var relative := parent_transform
 	if node is Node3D: relative = parent_transform*(node as Node3D).transform
 	if node is MeshInstance3D:
@@ -233,7 +266,7 @@ func _collect_atlas_surfaces(node: Node, parent_transform: Transform3D, tools: D
 					var tool := SurfaceTool.new()
 					tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 					var material: Material = original
-					if original is StandardMaterial3D:
+					if apply_wind and original is StandardMaterial3D:
 						var wind := ShaderMaterial.new()
 						wind.shader = load("res://shaders/forest_wind.gdshader")
 						wind.set_shader_parameter("tint",(original as StandardMaterial3D).albedo_color)
@@ -245,7 +278,7 @@ func _collect_atlas_surfaces(node: Node, parent_transform: Transform3D, tools: D
 					tool.set_material(material)
 					tools[key] = tool
 				(tools[key] as SurfaceTool).append_from(mesh_node.mesh,surface,relative)
-	for child in node.get_children(): _collect_atlas_surfaces(child,relative,tools)
+	for child in node.get_children(): _collect_atlas_surfaces(child,relative,tools,apply_wind)
 
 
 func _place_atlas_model(parent: Node3D, id: String, x: float, z: float, height: float, angle: float) -> bool:
@@ -725,6 +758,11 @@ func _make_vegetation(parent: Node3D, cell: Vector2i) -> void:
 				var atlas_id := _atlas_tree(climate, _hash01(gx, gz, 72))
 				if _atlas_batched.has(atlas_id):
 					species = atlas_id
+				# One in five canopy candidates gets the richer, independently
+				# licensed PBR tree when the verified files were imported.
+				# All choices remain seeded and deterministic across chunk loads.
+				if _mesh_library.has("pbr-pine") and _hash01(gx, gz, 76) < 0.20 and stone < 0.58:
+					species = "pbr-pine"
 			_append_entry(collection, species, x, z, height, angle)
 			obstacles.append(Vector3(x, 0.65, z))
 	# Подлесок тоже имеет пятна: грибы под кронами, цветы на полянах,
