@@ -83,6 +83,7 @@ var weather_elapsed := 0.0
 var _cloud_mix := 0.0
 var _sky_update_elapsed := 0.0
 var _material_update_elapsed := 0.0
+var _audio_update_elapsed := 0.0
 var action_time := 0.0
 var action_finish: Callable
 var action_label := ""
@@ -886,8 +887,13 @@ func _physics_process(delta: float) -> void:
 		_check_secret()
 	_update_camera(delta)
 	_update_weather(delta)
-	if audio != null:
-		audio.set_ambience(bool(state["night"]), raining)
+	_audio_update_elapsed += delta
+	if audio != null and _audio_update_elapsed >= 0.45:
+		_audio_update_elapsed = 0.0
+		var audio_biome: String = world.biome_at(player.position.x, player.position.z)
+		var river_distance: float = absf(player.position.z - world.river_center(player.position.x)) - world.river_half_width(player.position.x)
+		var audio_weather: String = str(chapter.sim.weather()) if chapter != null else ("storm" if raining else "clear")
+		audio.set_soundscape(bool(state["night"]), raining, audio_biome, maxf(0.0, river_distance), audio_weather)
 	if society != null:
 		society.simulation.bridge_open = bool(state["bridge"])
 	if builder_ai != null:
