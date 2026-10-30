@@ -1,4 +1,10 @@
 extends RefCounted
+## Facing conventions verified against player feedback in the Windows prototype:
+## Paki's imported forward axis is -Z; Bruno's imported forward axis is +Z.
+## Keep yaw offsets here so hero, builder and residents cannot diverge.
+const PAKI_VISUAL_YAW := 0.0
+const BRUNO_VISUAL_YAW := PI
+
 ## Преобразует исходные locomotion-клипы в движения на месте.
 ## Контроллер перемещает Node3D героя; горизонтальный root motion в Hips
 ## не должен двигать скелет второй раз. Вертикальную работу таза сохраняем.
