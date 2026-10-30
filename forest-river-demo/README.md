@@ -1,0 +1,42 @@
+# Forest & River — Godot 4.6 graphics showcase
+
+Standalone, explorable 3D forest with a winding river, carved walkable banks,
+animated water, realistic trees, PBR terrain, grass, sunlight shafts, fog,
+shadows and forest vegetation.
+
+This is an **independent demo project**, not a modification of Butterfly Valley.
+For attribution, see [CREDITS.md](CREDITS.md).
+
+## Play it on Windows
+
+1. Download `ForestRiverDemo-Windows.zip` from the `Forest river demo - Windows` GitHub Actions run in this repository.
+2. Unzip it and run `ForestRiver.exe`.
+3. Walk with **WASD**, look with the **mouse**, press **Esc** to release the cursor.
+
+Requires Windows with a Vulkan-capable GPU. The demo uses Godot 4.6 Forward+.
+
+## Open and edit in Godot
+
+The project is reconstructed from the open-source [Godot Procedural Forest Demo](https://github.com/GamesNotDeveloped/godot-forest-demo), pinned to a specific commit for reproducibility. This keeps the Git repository lightweight and retains all original asset licences.
+
+```bash
+python scripts/assemble.py --output /path/to/ForestRiverDemo
+```
+
+Open `ForestRiverDemo/project.godot` in Godot 4.6 or later. For offline assembly using an existing downloaded source:
+
+```bash
+python scripts/assemble.py --source /path/to/godot-forest-demo --output /path/to/ForestRiverDemo
+```
+
+## Files to edit
+
+- `demo/RiverTerrain.gd` — river shape, depth and walkable banks.
+- `demo/ForestRiverController.gd` — water mesh, shore stones, vegetation masking and spawn.
+- `demo/river_water.gdshader` — animated flow, ripples, shallows and specular highlights.
+- `scripts/assemble.py` — pinned, reproducible demo assembly.
+
+## Limitations
+
+- High tree density, volumetric fog and sunlight shafts can tax integrated GPUs.
+- This is a graphics showcase, not a river physics simulation. No buoyancy or true planar reflection yet.
