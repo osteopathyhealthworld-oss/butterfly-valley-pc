@@ -24,5 +24,22 @@ jobs:
           python3 -m compileall -q scripts
           git diff --check
 
+  godot-construction:
+    name: Verify modular houses in Godot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Import the public project and validate building scenes
+        shell: bash
+        run: |
+          godot --version
+          godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
+          godot --headless --rendering-method gl_compatibility --path game -s res://tests/construction_smoke.gd
+
 # Full Godot import and Windows export need the character models kept in the
 # companion PRIVATE_REPOSITORY. Its manual workflow publishes the playable ZIP.
