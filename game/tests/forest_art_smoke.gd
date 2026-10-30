@@ -35,5 +35,19 @@ func _verify() -> void:
         if not (material is BaseMaterial3D):
             _fail("Source PBR material was replaced or lost on surface " + str(index))
             return
-    print("FOREST_ART_SMOKE_PASS: pinned PBR pine, trunk/leaves, source materials, Godot MultiMesh library")
+    if world._grass_v2 == null or world._grass_material != world._grass_v2:
+        _fail("Detailed desktop terrain did not select Art V2")
+        return
+    for parameter in ["grass_color", "meadow_color", "forest_color", "soil_color", "rock_color", "grass_normal", "forest_normal", "rock_normal"]:
+        if not (world._grass_v2.get_shader_parameter(parameter) is Texture2D):
+            _fail("Terrain V2 is missing a CC0 texture: " + parameter)
+            return
+    var holder := Node3D.new()
+    root.add_child(holder)
+    world._make_terrain(holder, Vector2i(0, 0))
+    var terrain := holder.get_node_or_null("Земля") as MeshInstance3D
+    if terrain == null or terrain.mesh == null or terrain.mesh.surface_get_material(0) != world._grass_v2:
+        _fail("Streaming terrain is still drawing the legacy shader")
+        return
+    print("FOREST_ART_SMOKE_PASS: PBR pine + eight terrain maps, preserved materials and streamed terrain Art V2")
     quit(0)
