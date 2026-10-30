@@ -5,8 +5,14 @@ Door_1_Flat.bin 24924
 Door_1_Flat.gltf 3895
 Floor_WoodDark.bin 2240
 Floor_WoodDark.gltf 2143
+Roof_RoundTiles_4x4.bin 107176
+Roof_RoundTiles_4x4.gltf 4337
+Roof_RoundTiles_6x4.bin 114352
+Roof_RoundTiles_6x4.gltf 4340
 Roof_RoundTiles_6x6.bin 167464
 Roof_RoundTiles_6x6.gltf 4343
+Roof_RoundTiles_8x8.bin 195328
+Roof_RoundTiles_8x8.gltf 4342
 T_Brick_BaseColor.png 2447169
 T_Brick_Normal.png 4474267
 T_Brick_Roughness.png 689204
