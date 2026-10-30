@@ -168,6 +168,14 @@ func _make_frame() -> void:
 		_part(2, "Поперечная балка", Vector3(0.31, 0.30, 5.75), Vector3(x, 3.69, 0), oak, 0.0, _frame_visual)
 	_part(2, "Коньковая балка", Vector3(0.24, 0.24, 6.4), Vector3(0, 5.22, 0), oak, 0.0, _frame_visual)
 
+func _front_has_window(x: float) -> bool:
+	if appearance == "barn":
+		return false
+	if appearance != "cottage" or variant % 3 == 0:
+		return true
+	return x > 0.0 if variant % 3 == 1 else x < 0.0
+
+
 func _make_walls() -> void:
 	# Windows, doors and wall sections are real textured 2-metre Quaternius
 	# modules. The four building types have different facades.
@@ -176,7 +184,7 @@ func _make_walls() -> void:
 			var rear := "Wall_Plaster_Window_Wide_Flat" if appearance == "alchemist" and is_zero_approx(x) else "Wall_Plaster_Straight"
 			_module(3, rear, Vector3(x, 0.66, -2.82), PI)
 		for x in [-2.0, 0.0, 2.0]:
-			var front := "Wall_Plaster_Door_Flat" if is_zero_approx(x) else ("Wall_Plaster_Straight" if appearance == "barn" else "Wall_Plaster_Window_Wide_Flat")
+			var front := "Wall_Plaster_Door_Flat" if is_zero_approx(x) else ("Wall_Plaster_Window_Wide_Flat" if _front_has_window(x) else "Wall_Plaster_Straight")
 			_module(3, front, Vector3(x, 0.66, 2.82))
 		for z in [-2.0, 0.0, 2.0]:
 			var side := "Wall_Plaster_Window_Wide_Flat" if is_zero_approx(z) and appearance in ["cottage", "alchemist"] else "Wall_Plaster_Straight"
@@ -233,8 +241,15 @@ func _make_finishing() -> void:
 		_part(5, "Входная дверь", Vector3(1.68, 2.48, 0.14), Vector3(0, 1.73, 2.93), oak)
 	if appearance != "barn":
 		for x in [-2.0, 2.0]:
+			if not _front_has_window(x):
+				continue
 			if not _module(5, "Window_Wide_Flat1", Vector3(x, 0.66, 3.03)):
 				_part(5, "Окно", Vector3(0.84, 0.93, 0.15), Vector3(x, 2.14, 2.96), glass)
+	if appearance in ["cottage", "alchemist"]:
+		_module(5, "Window_Wide_Flat1", Vector3(-3.22, 0.66, 0), -PI * 0.5)
+		_module(5, "Window_Wide_Flat1", Vector3(3.22, 0.66, 0), PI * 0.5)
+	if appearance == "alchemist":
+		_module(5, "Window_Wide_Flat1", Vector3(0, 0.66, -3.03), PI)
 	# A timber doorstep visually connects the door with the footpath.
 	_module(5, "Floor_WoodDark", Vector3(0, 0.68, 3.65), 0.0, Vector3(1.05, 1.0, 0.82))
 	if appearance in ["cottage", "alchemist"]:
