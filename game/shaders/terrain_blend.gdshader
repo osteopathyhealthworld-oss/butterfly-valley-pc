@@ -5,11 +5,14 @@ render_mode cull_back, diffuse_burley, specular_schlick_ggx;
 // across streamed chunks and there are no visible UV seams.
 uniform sampler2D grass_color : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D meadow_color : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D forest_color : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D rock_color : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D soil_color : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D grass_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform float wetness : hint_range(0.0,1.0) = 0.0;
 
 varying vec2 ground_uv;
+varying vec2 biome_weights;
 
 float patch_noise(vec2 p) {
 	vec2 i = floor(p);
@@ -24,22 +27,31 @@ float patch_noise(vec2 p) {
 
 void vertex() {
 	ground_uv = UV * 4.0;
+	biome_weights = UV2;
 }
 
 void fragment() {
 	vec2 uv = ground_uv;
-	float meadow_amount = clamp(COLOR.a * 0.8, 0.0, 0.78);
-	float large_patch = patch_noise(uv * 0.08);
-	float soil_amount = smoothstep(0.65, 0.88, large_patch) * 0.34;
+	// Large-scale forest/meadow/rock regions come from the landscape,
+	// while smaller patches break the repeated-tile appearance.
+	float large_patch = patch_noise(uv * 0.075);
+	float fine_patch = patch_noise(uv * 0.36);
+	float meadow_amount = clamp(COLOR.a * 0.72 + (large_patch - 0.5) * 0.13, 0.0, 0.78);
+	float forest_amount = smoothstep(0.17, 0.66, biome_weights.x + (large_patch - 0.5) * 0.22) * 0.94;
+	float rock_amount = smoothstep(0.28, 0.75, biome_weights.y + (large_patch - 0.5) * 0.18) * 0.86;
+	float exposed_soil = smoothstep(0.58, 0.86, fine_patch + forest_amount * 0.13) * 0.37;
 	vec3 grass = texture(grass_color, uv).rgb;
 	vec3 meadow = texture(meadow_color, uv * 0.83).rgb;
+	vec3 forest = texture(forest_color, uv * 0.89).rgb;
 	vec3 soil = texture(soil_color, uv * 1.12).rgb;
+	vec3 rock = texture(rock_color, uv * 0.76).rgb;
 	vec3 surface_color = mix(grass, meadow, meadow_amount);
-	surface_color = mix(surface_color, soil, soil_amount);
-	ALBEDO = surface_color * mix(vec3(1.0), COLOR.rgb, 0.45) * mix(1.0,0.76,wetness);
+	surface_color = mix(surface_color, forest, forest_amount);
+	surface_color = mix(surface_color, soil, exposed_soil);
+	surface_color = mix(surface_color, rock, rock_amount);
+	ALBEDO = surface_color * mix(vec3(1.0), COLOR.rgb, 0.37) * mix(1.0, 0.76, wetness);
 	NORMAL_MAP = texture(grass_normal, uv).rgb;
 	NORMAL_MAP_DEPTH = 0.45;
-	ROUGHNESS = mix(0.93,0.47,wetness);
+	ROUGHNESS = mix(0.93, 0.47, wetness);
 	METALLIC = 0.0;
 }
-
