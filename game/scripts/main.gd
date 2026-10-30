@@ -145,6 +145,8 @@ func _make_lighting() -> void:
 		sky_material.sky_horizon_color = Color("#d9d8b9")
 		sky_material.ground_horizon_color = Color("#c4c4a6")
 		var sky := Sky.new()
+		# Smooth day/night transitions spread radiance updates over several frames.
+		sky.process_mode = Sky.PROCESS_MODE_INCREMENTAL
 		sky.sky_material = sky_material
 		environment.environment.sky = sky
 		environment.environment.background_mode = Environment.BG_SKY
