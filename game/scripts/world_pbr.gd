@@ -62,6 +62,7 @@ var _wetness := 0.0
 var _grass_material: Material
 var _grass_basic: StandardMaterial3D
 var _grass_detailed: ShaderMaterial
+var _grass_v2: ShaderMaterial
 var _water_material: Material
 var _path_material: StandardMaterial3D
 var _bank_material: StandardMaterial3D
@@ -122,6 +123,24 @@ func _ready() -> void:
 		_grass_detailed.set_shader_parameter("rock_color", load("res://assets/environment/rock-color.jpg"))
 		_grass_detailed.set_shader_parameter("soil_color", load("res://assets/environment/soil-color.jpg"))
 		_grass_detailed.set_shader_parameter("grass_normal", load("res://assets/environment/grass-ground-normal.jpg"))
+	# Higher-quality ground uses distinct normal maps for forest and stone,
+	# larger soil patches and less vertex tint. Keep the old shader on web/low.
+	var enhanced_path := "res://shaders/terrain_blend_v2.gdshader"
+	if not OS.has_feature("web") and has_terrain_textures and ResourceLoader.exists(enhanced_path) and ResourceLoader.exists("res://assets/environment/forest-normal.jpg") and ResourceLoader.exists("res://assets/environment/rock-normal.jpg"):
+		_grass_v2 = ShaderMaterial.new()
+		_grass_v2.shader = load(enhanced_path)
+		var terrain_maps := {
+			"grass_color": "grass-ground-color.jpg",
+			"meadow_color": "meadow-color.jpg",
+			"forest_color": "forest-color.jpg",
+			"rock_color": "rock-color.jpg",
+			"soil_color": "soil-color.jpg",
+			"grass_normal": "grass-ground-normal.jpg",
+			"forest_normal": "forest-normal.jpg",
+			"rock_normal": "rock-normal.jpg"
+		}
+		for key in terrain_maps:
+			_grass_v2.set_shader_parameter(key, load("res://assets/environment/" + terrain_maps[key]))
 	# The economical graphics mode still needs textured, varied ground.
 	# Its performance savings come from streaming fewer terrain chunks.
 	_grass_material = _grass_detailed if _grass_detailed != null else _grass_basic
@@ -389,6 +408,8 @@ func set_weather_wetness(value: float, delta: float = 0.016667) -> void:
 	_wetness = next_wetness
 	if _grass_detailed != null:
 		_grass_detailed.set_shader_parameter("wetness", _wetness)
+	if _grass_v2 != null:
+		_grass_v2.set_shader_parameter("wetness", _wetness)
 	for material in _wind_materials:
 		material.set_shader_parameter("wind_strength", lerpf(0.45, 1.7, _wetness))
 
@@ -400,7 +421,7 @@ func set_quality(enabled: bool) -> void:
 	high_quality = enabled
 	# Keep the original textured ground in both modes. Quality controls
 	# chunk radius and plant density, so switching never erases textures.
-	_grass_material = _grass_detailed if _grass_detailed != null else _grass_basic
+	_grass_material = _grass_v2 if high_quality and _grass_v2 != null else (_grass_detailed if _grass_detailed != null else _grass_basic)
 	for chunk in _loaded.values():
 		chunk.queue_free()
 	_loaded.clear()
