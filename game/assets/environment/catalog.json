@@ -1,0 +1,420 @@
+{
+  "license": "CC0-1.0",
+  "models": [
+    {
+      "name": "q-birch-1",
+      "original": "BirchTree_1",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/ultimatestylizednature.html",
+      "triangles": 4596
+    },
+    {
+      "name": "q-birch-2",
+      "original": "BirchTree_4",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/ultimatestylizednature.html",
+      "triangles": 3562
+    },
+    {
+      "name": "q-common-tree",
+      "original": "CommonTree_3",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 3505
+    },
+    {
+      "name": "q-pine-1",
+      "original": "Pine_1",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 3947
+    },
+    {
+      "name": "q-pine-2",
+      "original": "Pine_3",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 4964
+    },
+    {
+      "name": "q-dead-tree",
+      "original": "DeadTree_5",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 5648
+    },
+    {
+      "name": "q-oak-wide",
+      "original": "CommonTree_1",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 6265
+    },
+    {
+      "name": "q-oak-tall",
+      "original": "CommonTree_5",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 3182
+    },
+    {
+      "name": "q-twisted-1",
+      "original": "TwistedTree_1",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 9564
+    },
+    {
+      "name": "q-twisted-2",
+      "original": "TwistedTree_3",
+      "file": "canopy.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 10089
+    },
+    {
+      "name": "q-fern",
+      "original": "Fern_1",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 288
+    },
+    {
+      "name": "q-clover",
+      "original": "Clover_1",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 379
+    },
+    {
+      "name": "q-flowering-bush",
+      "original": "Bush_Common_Flowers",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 1368
+    },
+    {
+      "name": "q-river-plant",
+      "original": "Plant_1",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 120
+    },
+    {
+      "name": "q-broad-leaf",
+      "original": "Plant_7",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 48
+    },
+    {
+      "name": "q-blue-flowers",
+      "original": "Flower_3_Group",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 755
+    },
+    {
+      "name": "q-white-flowers",
+      "original": "Flower_4_Group",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 1690
+    },
+    {
+      "name": "q-wispy-grass",
+      "original": "Grass_Wispy_Tall",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 622
+    },
+    {
+      "name": "q-shelf-mushroom",
+      "original": "Mushroom_Laetiporus",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 3216
+    },
+    {
+      "name": "q-clover-2",
+      "original": "Clover_2",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 615
+    },
+    {
+      "name": "q-bush",
+      "original": "Bush_Common",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 900
+    },
+    {
+      "name": "q-short-grass",
+      "original": "Grass_Common_Short",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 155
+    },
+    {
+      "name": "q-tall-grass",
+      "original": "Grass_Common_Tall",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 326
+    },
+    {
+      "name": "q-wispy-short",
+      "original": "Grass_Wispy_Short",
+      "file": "undergrowth.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 494
+    },
+    {
+      "name": "q-rock-1",
+      "original": "Rock_Medium_1",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 342
+    },
+    {
+      "name": "q-rock-2",
+      "original": "Rock_Medium_2",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 244
+    },
+    {
+      "name": "q-rock-3",
+      "original": "Rock_Medium_3",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 522
+    },
+    {
+      "name": "q-pebble-1",
+      "original": "Pebble_Round_1",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 136
+    },
+    {
+      "name": "q-pebble-2",
+      "original": "Pebble_Round_3",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 128
+    },
+    {
+      "name": "q-stepping-stone",
+      "original": "RockPath_Round_Thin",
+      "file": "river-stones.glb",
+      "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+      "triangles": 2254
+    }
+  ],
+  "materials": [
+    {
+      "name": "meadow",
+      "source": "https://polyhaven.com/a/aerial_grass_rock",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 512
+    },
+    {
+      "name": "forest",
+      "source": "https://polyhaven.com/a/forest_ground_06",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 512
+    },
+    {
+      "name": "soil",
+      "source": "https://polyhaven.com/a/farm_soil",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 512
+    },
+    {
+      "name": "gravel",
+      "source": "https://polyhaven.com/a/leaf_scattered_gravel",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 512
+    },
+    {
+      "name": "grass-ground",
+      "source": "https://polyhaven.com/a/grass_ground",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 1024
+    },
+    {
+      "name": "leafy-grass",
+      "source": "https://polyhaven.com/a/leafy_grass",
+      "maps": [
+        "color"
+      ],
+      "size": 1024
+    },
+    {
+      "name": "rock",
+      "source": "https://ambientcg.com/view?id=Rock059",
+      "maps": [
+        "color",
+        "normal",
+        "orm"
+      ],
+      "size": 512
+    }
+  ],
+  "lighting": {
+    "source": "https://polyhaven.com/a/epping_forest_02",
+    "file": "epping-forest-1k.hdr"
+  },
+  "water": {
+    "file": "water-normal.png",
+    "source": "Original periodic wave normal field"
+  },
+  "files": [
+    {
+      "name": "Quaternius-CC0.txt",
+      "bytes": 830,
+      "sha256": "b7a9351ca5f22ca91178b292748892e521515a6e98189dbfcd32a9cefeabe5ef"
+    },
+    {
+      "name": "canopy.glb",
+      "bytes": 5052320,
+      "sha256": "4dfdc7934743a9bf557f578627ec684d450c73ecdb55ac5ff42b45eb32f6a073"
+    },
+    {
+      "name": "epping-forest-1k.hdr",
+      "bytes": 1774503,
+      "sha256": "7708c99f99c32bc0d40883d6f853cb387adba170198e818f14b332e4cb275b21"
+    },
+    {
+      "name": "forest-color.jpg",
+      "bytes": 57994,
+      "sha256": "4683e327306dd2cdd7f4f7fc818fc52e5302dd6f4dcea40b6f441f985aa16e0a"
+    },
+    {
+      "name": "forest-normal.jpg",
+      "bytes": 102957,
+      "sha256": "b93fbaa54aadd84485428025c35225dbe0e5366c6aac45f219407bd38a97ab95"
+    },
+    {
+      "name": "forest-orm.jpg",
+      "bytes": 77414,
+      "sha256": "4b90f9fc9a1e3bfda2fa0ed9066bc5d0b5d95399dfa22041d2ea947eab37edf8"
+    },
+    {
+      "name": "grass-ground-color.jpg",
+      "bytes": 323258,
+      "sha256": "27cafebab13c748f2846bdd9d454110566c71bd9ebac41ef5aa554afec96adc8"
+    },
+    {
+      "name": "grass-ground-normal.jpg",
+      "bytes": 514555,
+      "sha256": "b8452445128b5c91469a49753a12ee840dea6c12a797aa64ac64e79b2cf5aac4"
+    },
+    {
+      "name": "grass-ground-orm.jpg",
+      "bytes": 265240,
+      "sha256": "df8c2270110f744618190a0b0879b4b88df0ae6e7b2726b4ce899b9dd9ae7351"
+    },
+    {
+      "name": "gravel-color.jpg",
+      "bytes": 87935,
+      "sha256": "92bed3c9521cc4af0538f5642b05f0e5ad5756cdde9ed224311855b1e9408f41"
+    },
+    {
+      "name": "gravel-normal.jpg",
+      "bytes": 135251,
+      "sha256": "ed5c111449798b1cbc47234a4241cf298a4e7c182c1dfb6f6298a1f75477ce07"
+    },
+    {
+      "name": "gravel-orm.jpg",
+      "bytes": 84444,
+      "sha256": "8a5ac9a16839717bcabbd6fcfeb219f7ff74b4554505f6228c1e88a80d3e6d7d"
+    },
+    {
+      "name": "leafy-grass-color.jpg",
+      "bytes": 484475,
+      "sha256": "29ee62d96c3399776f6410e69c7a6e14148fbaa8c376ca86d235cba822e23ccd"
+    },
+    {
+      "name": "meadow-color.jpg",
+      "bytes": 70548,
+      "sha256": "0b4e8e92f14b65dc848749be76fee0b0263eecae74c9a7c77f6bd240b6c7c217"
+    },
+    {
+      "name": "meadow-normal.jpg",
+      "bytes": 73521,
+      "sha256": "4a84826c730c3df94363214792ec81aaa038e1f38220a76aa1a2b99961fb167c"
+    },
+    {
+      "name": "meadow-orm.jpg",
+      "bytes": 57617,
+      "sha256": "ae4dd0b99750577287b6f6ff7a4dfab911159080db9524b42eb81f80bc8cc8fa"
+    },
+    {
+      "name": "river-stones.glb",
+      "bytes": 316520,
+      "sha256": "6d4b343b53ecd45cb7897c0e6ae3915b1030cf9edbe6bbddf9be64b8b04e11b5"
+    },
+    {
+      "name": "rock-color.jpg",
+      "bytes": 46500,
+      "sha256": "77a1d37b302385d974fc9159e8a9efd204be12bb055bd259215275010e0b7f8c"
+    },
+    {
+      "name": "rock-normal.jpg",
+      "bytes": 91108,
+      "sha256": "6c85b2679d3f332e00b2604ce0635f2b29b1498515e2cde40d5adec0273a0deb"
+    },
+    {
+      "name": "rock-orm.jpg",
+      "bytes": 60471,
+      "sha256": "3c8826e65a5b0e147599a6a5fc2cdaacbadf57508f431fd787782435c82dfe7a"
+    },
+    {
+      "name": "soil-color.jpg",
+      "bytes": 54666,
+      "sha256": "842b668c034494980633984b92cba6bac42c842b2a81066ee67370bcc9b22766"
+    },
+    {
+      "name": "soil-normal.jpg",
+      "bytes": 141544,
+      "sha256": "551d4e77537148b53abd5d6c9162ec6b34b0bfb42feaefb126aeef9659c505f8"
+    },
+    {
+      "name": "soil-orm.jpg",
+      "bytes": 71777,
+      "sha256": "19a455dd20963c544012d8b8b882d8ff5f33a5a371cd3780ec4be1a91cd08a47"
+    },
+    {
+      "name": "undergrowth.glb",
+      "bytes": 1085840,
+      "sha256": "02965527faa50514a6a2d26cf35404550f56b0daead7cbe809207fa6e70228de"
+    },
+    {
+      "name": "water-normal.png",
+      "bytes": 87760,
+      "sha256": "f511a676499cc6283132d7d1df1303ddedb209bd60a12bba415f5ab68fbf59bc"
+    }
+  ]
+}
