@@ -123,7 +123,8 @@ func _switch_nature(relative: String) -> void:
 	if _nature_path.is_empty():
 		next_slot = "nature_a"
 	if _start_loop(next_slot, relative, -30.0):
-		_targets[_nature_slot] = SILENCE_DB
+		if next_slot != _nature_slot:
+			_targets[_nature_slot] = SILENCE_DB
 		_nature_slot = next_slot
 		_nature_path = relative
 
@@ -133,7 +134,8 @@ func _switch_music(relative: String) -> void:
 	if str(_paths[_music_slot]).is_empty():
 		next_slot = "music_a"
 	if _start_loop(next_slot, relative, _music_volume):
-		_targets[_music_slot] = SILENCE_DB
+		if next_slot != _music_slot:
+			_targets[_music_slot] = SILENCE_DB
 		_music_slot = next_slot
 		_music_elapsed = 0.0
 
