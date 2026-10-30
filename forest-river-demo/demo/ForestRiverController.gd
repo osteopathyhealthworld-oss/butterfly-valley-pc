@@ -5,6 +5,8 @@ const WaterShader = preload("res://demo/river_water.gdshader")
 const WATER_LENGTH := 196.0
 const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
+const HOUSE_SPOT := Vector2(27.0, -17.0)
+const WELL_SPOT := Vector2(25.0, -4.0)
 
 @onready var terrain: Node3D = $Terrain
 @onready var player: Node3D = $UP_FPSController_Prefab
@@ -33,6 +35,11 @@ func _river_distance(x: float, z: float) -> float:
 	return absf(x - RiverTerrainScript.center_at(z))
 
 
+func _is_prop_clearing(x: float, z: float) -> bool:
+	var spot := Vector2(x, z)
+	return spot.distance_squared_to(HOUSE_SPOT) < 9.0 * 9.0 or spot.distance_squared_to(WELL_SPOT) < 3.8 * 3.8
+
+
 func _install_river_masks() -> void:
 	for biome_name in ["Trees", "Plants", "Plants2"]:
 		var biome: Node3D = get_node(biome_name)
@@ -48,12 +55,11 @@ func _install_river_masks() -> void:
 			var z: float = (float(py) / float(mask.get_height() - 1) - 0.5) * dimensions.y
 			for px in range(mask.get_width()):
 				var x: float = (float(px) / float(mask.get_width() - 1) - 0.5) * dimensions.x
-				if _river_distance(x, z) < 8.0:
+				if _river_distance(x, z) < 8.0 or _is_prop_clearing(x, z):
 					var c: Color = mask.get_pixel(px, py)
 					c.r = 0.0 if biome_name == "Plants2" else 1.0
 					mask.set_pixel(px, py, c)
 		biome.set("mask_texture", ImageTexture.create_from_image(mask))
-		biome.call_deferred("regenerate")
 
 	var grass_source: Texture2D = terrain.get("grass_mask_texture")
 	if grass_source == null:
@@ -67,12 +73,21 @@ func _install_river_masks() -> void:
 		var z: float = (float(py) / float(grass_mask.get_height() - 1) - 0.5) * grass_dimensions.y
 		for px in range(grass_mask.get_width()):
 			var x: float = (float(px) / float(grass_mask.get_width() - 1) - 0.5) * grass_dimensions.x
-			if _river_distance(x, z) < 9.2:
+			if _river_distance(x, z) < 9.2 or _is_prop_clearing(x, z):
 				var c: Color = grass_mask.get_pixel(px, py)
 				c.g = 1.0
 				grass_mask.set_pixel(px, py, c)
 	terrain.set("grass_mask_texture", ImageTexture.create_from_image(grass_mask))
-	terrain.call_deferred("regenerate")
+	terrain.regenerate()
+	_rebuild_biomes_after_terrain.call_deferred()
+
+
+func _rebuild_biomes_after_terrain() -> void:
+	# Trees are positioned by physics raycasts. Let the new terrain collision
+	# enter the physics world before recasting all tree and plant positions.
+	await get_tree().physics_frame
+	for biome_name in ["Trees", "Plants", "Plants2"]:
+		get_node(biome_name).regenerate()
 
 
 func _build_river() -> void:
@@ -159,8 +174,8 @@ func _position_props() -> void:
 	# Original forest has a cottage and well at x≈1: exactly inside our river.
 	# Relocate both to dry ground, retaining their authored models and rotation.
 	var placements := {
-		"OldHouse": Vector2(27.0, -17.0),
-		"OldWell": Vector2(25.0, -4.0),
+		"OldHouse": HOUSE_SPOT,
+		"OldWell": WELL_SPOT,
 	}
 	for prop_name in placements:
 		var prop: Node3D = get_node_or_null(prop_name)

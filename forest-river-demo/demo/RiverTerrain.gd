@@ -13,6 +13,10 @@ static func water_height_at(z: float) -> float:
 
 func _sample_height(local_x: float, local_z: float) -> float:
 	var original: float = super._sample_height(local_x, local_z)
+	return carve_height(local_x, local_z, original)
+
+
+static func carve_height(local_x: float, local_z: float, original: float) -> float:
 	var distance: float = absf(local_x - center_at(local_z))
 	if distance >= BANK_OUTER:
 		return original
@@ -22,3 +26,20 @@ func _sample_height(local_x: float, local_z: float) -> float:
 		return level - 1.15 + 1.22 * bed_ratio * bed_ratio
 	var t: float = smoothstep(RIVER_HALF_WIDTH, BANK_OUTER, distance)
 	return lerpf(level + 0.07, original, t) + 1.15 * sin(t * PI) * (1.0 - 0.25 * t)
+
+
+func _build_grass_transforms(payload: Dictionary) -> Dictionary:
+	# The upstream grass worker samples the ORIGINAL noise independently of the
+	# terrain mesh. Apply the same carving to every generated grass transform;
+	# otherwise vegetation floats or sinks along the raised riverbanks.
+	# Uses payload values only: safe for the background grass-generation thread.
+	var built: Dictionary = super._build_grass_transforms(payload)
+	var transforms: Array[Transform3D] = built["transforms"]
+	var offset: float = payload["height_offset"]
+	for i in range(transforms.size()):
+		var pose: Transform3D = transforms[i]
+		var base_y: float = pose.origin.y - offset
+		pose.origin.y = carve_height(pose.origin.x, pose.origin.z, base_y) + offset
+		transforms[i] = pose
+	built["transforms"] = transforms
+	return built

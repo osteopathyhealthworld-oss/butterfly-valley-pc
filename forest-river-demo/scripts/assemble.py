@@ -63,6 +63,10 @@ def assemble(source: Path, output: Path) -> None:
     project = re.sub(r'run/main_scene="[^"]+"', 'run/main_scene="res://levels/forest_river_demo.tscn"', project)
     project = project.replace('rendering_device/driver.windows="d3d12"',
                               'rendering_device/driver.windows="vulkan"')
+    # DebugMenu is an editor-oriented upstream autoload, irrelevant to this
+    # playable showcase. Its UID triggered startup warnings and its overlay
+    # competed with our own discreet performance display.
+    project = re.sub(r'^DebugMenu="\*uid://[^"]+"\n', '', project, flags=re.M)
     # These editor-only plugins are not needed to run or edit the demo and
     # can fail on first scan before icon textures finish importing.
     project = re.sub(r'^enabled=PackedStringArray\([^\n]*\)',
@@ -71,6 +75,7 @@ def assemble(source: Path, output: Path) -> None:
     shutil.copy2(HERE / "windows_export_presets.cfg", output / "export_presets.cfg")
     shutil.copy2(HERE / "CREDITS.md", output / "CREDITS.md")
     shutil.copy2(HERE / "README.md", output / "FOREST_RIVER_README.md")
+    shutil.copy2(HERE / "QA.md", output / "QA.md")
     shutil.copy2(HERE / "LICENSE-DEMO-MIT", output / "LICENSE-DEMO-MIT")
     print(f"Godot project ready: {output}")
 
