@@ -28,6 +28,7 @@ var _pending: Array[Vector2i] = []
 var _active_build: Dictionary = {}
 var _mesh_library: Dictionary = {}
 var _colliders: Dictionary = {}
+var navigation_revision := 0
 var _glades: Dictionary = {}
 var _grass_material: Material
 var _grass_basic: StandardMaterial3D
@@ -159,6 +160,7 @@ func set_quality(enabled: bool) -> void:
 		chunk.queue_free()
 	_loaded.clear()
 	_colliders.clear()
+	navigation_revision += 1
 	_glades.clear()
 	_pending.clear()
 	_active_build.clear()
@@ -184,6 +186,7 @@ func update_stream(player_position: Vector3) -> void:
 				_loaded[key].queue_free()
 				_loaded.erase(key)
 				_colliders.erase(key)
+				navigation_revision += 1
 				_glades.erase(key)
 		for key in _pending.duplicate():
 			if not wanted.has(key):
@@ -471,6 +474,7 @@ func _make_vegetation(parent: Node3D, cell: Vector2i) -> void:
 				height *= 1.35
 			_append_entry(collection, species, x, z, height, _hash01(gx, gz, 17) * TAU)
 	_colliders[cell] = obstacles
+	navigation_revision += 1
 	_flush_instances(parent, collection)
 
 func _choose_tree(climate: Dictionary, roll: float) -> String:
@@ -624,11 +628,17 @@ func _fallback_mesh(tree: bool) -> Mesh:
 	return primitive
 
 func set_workshop_stage(value: int) -> void:
-	workshop_stage = clampi(value, 0, 5)
+	var next_stage := clampi(value, 0, 5)
+	if workshop_stage != next_stage:
+		workshop_stage = next_stage
+		navigation_revision += 1
 
 func set_builder_trees(trees: Array) -> void:
 	for i in range(mini(BUILDER_TREES.size(), trees.size())):
-		_builder_trees_cut[i] = bool(trees[i].get("cut", false)) if trees[i] is Dictionary else false
+		var cut: bool = bool(trees[i].get("cut", false)) if trees[i] is Dictionary else false
+		if _builder_trees_cut[i] != cut:
+			_builder_trees_cut[i] = cut
+			navigation_revision += 1
 
 func can_walk(x: float, z: float, bridge_open: bool) -> bool:
 	var across := bridge_open and absf(x - 5.0) < 1.85 and z > 3.35 and z < 15.65
