@@ -105,7 +105,7 @@ func _ready() -> void:
 		_grass_basic.normal_texture = load("res://assets/environment/grass-ground-normal.jpg")
 		_grass_basic.normal_scale = 0.45
 	var terrain_shader_path := "res://shaders/terrain_blend.gdshader"
-	var terrain_tex := ["grass-ground-color.jpg", "meadow-color.jpg", "soil-color.jpg", "grass-ground-normal.jpg"]
+	var terrain_tex := ["grass-ground-color.jpg", "meadow-color.jpg", "forest-color.jpg", "soil-color.jpg", "rock-color.jpg", "grass-ground-normal.jpg"]
 	var has_terrain_textures := true
 	for texture_name in terrain_tex:
 		if not ResourceLoader.exists("res://assets/environment/" + texture_name):
@@ -115,6 +115,8 @@ func _ready() -> void:
 		_grass_detailed.shader = load(terrain_shader_path)
 		_grass_detailed.set_shader_parameter("grass_color", load("res://assets/environment/grass-ground-color.jpg"))
 		_grass_detailed.set_shader_parameter("meadow_color", load("res://assets/environment/meadow-color.jpg"))
+		_grass_detailed.set_shader_parameter("forest_color", load("res://assets/environment/forest-color.jpg"))
+		_grass_detailed.set_shader_parameter("rock_color", load("res://assets/environment/rock-color.jpg"))
 		_grass_detailed.set_shader_parameter("soil_color", load("res://assets/environment/soil-color.jpg"))
 		_grass_detailed.set_shader_parameter("grass_normal", load("res://assets/environment/grass-ground-normal.jpg"))
 	# The economical graphics mode still needs textured, varied ground.
@@ -494,8 +496,9 @@ func biome_at(x: float, z: float) -> String:
 		return "meadow"
 	return "old_forest"
 
-func _terrain_tint(x: float, z: float) -> Color:
-	var climate := climate_at(x, z)
+func _terrain_tint(x: float, z: float, climate: Dictionary = {}) -> Color:
+	if climate.is_empty():
+		climate = climate_at(x, z)
 	var result := Color("#789764")
 	result = result.lerp(Color("#5f8769"), float(climate["moisture"]) * 0.52)
 	result = result.lerp(Color("#708e79"), float(climate["cool"]) * 0.38)
@@ -546,27 +549,35 @@ func _make_terrain(parent: Node3D, cell: Vector2i) -> void:
 	var stride := GRID + 1
 	var positions: Array[Vector3] = []
 	var colors: Array[Color] = []
+	var biome_weights: Array[Vector2] = []
 	positions.resize(stride * stride)
 	colors.resize(stride * stride)
+	biome_weights.resize(stride * stride)
 	for iz in range(stride):
 		for ix in range(stride):
 			var x := start_x + ix * step
 			var z := start_z + iz * step
 			var index := iz * stride + ix
 			positions[index] = Vector3(x, ground_height(x, z), z)
-			colors[index] = _terrain_tint(x, z)
+			var climate := climate_at(x, z)
+			colors[index] = _terrain_tint(x, z, climate)
+			# Encode forest-floor and stone exposure in UV2; the shader uses
+			# them to blend distinct CC0 materials without a second terrain mesh.
+			var forest_weight := clampf(float(climate["groves"]) * 0.75 + float(climate["moss"]) * 0.30 + float(climate["elder"]) * 0.25 + float(climate["amber"]) * 0.18 - float(climate["openness"]) * 0.36, 0.0, 1.0)
+			var stone_weight := clampf(float(climate["stone"]) * 0.82 + float(climate["ridge"]) * 0.49, 0.0, 1.0)
+			biome_weights[index] = Vector2(forest_weight, stone_weight)
 	for iz in range(GRID):
 		for ix in range(GRID):
 			var a := iz * stride + ix
 			var b := a + 1
 			var c := a + stride
 			var d := c + 1
-			_add_cached_vertex(st, positions[a], colors[a])
-			_add_cached_vertex(st, positions[c], colors[c])
-			_add_cached_vertex(st, positions[b], colors[b])
-			_add_cached_vertex(st, positions[b], colors[b])
-			_add_cached_vertex(st, positions[c], colors[c])
-			_add_cached_vertex(st, positions[d], colors[d])
+			_add_cached_vertex(st, positions[a], colors[a], biome_weights[a])
+			_add_cached_vertex(st, positions[c], colors[c], biome_weights[c])
+			_add_cached_vertex(st, positions[b], colors[b], biome_weights[b])
+			_add_cached_vertex(st, positions[b], colors[b], biome_weights[b])
+			_add_cached_vertex(st, positions[c], colors[c], biome_weights[c])
+			_add_cached_vertex(st, positions[d], colors[d], biome_weights[d])
 	st.generate_normals()
 	st.generate_tangents() # Required by the PBR grass normal map.
 	var terrain := MeshInstance3D.new()
@@ -574,8 +585,9 @@ func _make_terrain(parent: Node3D, cell: Vector2i) -> void:
 	terrain.name = "Земля"
 	parent.add_child(terrain)
 
-func _add_cached_vertex(st: SurfaceTool, pos: Vector3, tint: Color) -> void:
+func _add_cached_vertex(st: SurfaceTool, pos: Vector3, tint: Color, biome: Vector2) -> void:
 	st.set_uv(Vector2(pos.x * 0.1, pos.z * 0.1))
+	st.set_uv2(biome)
 	st.set_color(tint)
 	st.add_vertex(pos)
 
@@ -700,17 +712,19 @@ func _make_vegetation(parent: Node3D, cell: Vector2i) -> void:
 			var groves: float = climate["groves"]
 			var openness: float = climate["openness"]
 			var stone: float = climate["stone"]
-			var density := (0.50 if high_quality else 0.32) * (0.55 + groves * 1.0) * (1.0 - openness * 0.62) * (1.0 - stone * 0.28)
+			var density := (0.43 if high_quality else 0.32) * (0.55 + groves * 1.0) * (1.0 - openness * 0.62) * (1.0 - stone * 0.28)
 			if _hash01(gx, gz, 3) > clampf(density, 0.04, 0.75):
 				continue
 			var species := _choose_tree(climate, _hash01(gx, gz, 4))
-			var height := lerpf(4.6, 9.5, _hash01(gx, gz, 5))
+			var height := lerpf(4.5, 7.6, _hash01(gx, gz, 5))
 			var angle := _hash01(gx, gz, 6) * TAU
-			# Approx. one quarter of the trees become complete, textured GLB
-			# models. Distant/remaining trees stay batched in inexpensive MultiMeshes.
-			if high_quality and _hash01(gx, gz, 71) < 0.27:
+			# Detailed mode uses batched Quaternius trees throughout the forest.
+			# Keep the old low-poly tree meshes only as a safe fallback for
+			# economy mode or a missing external atlas.
+			if high_quality:
 				var atlas_id := _atlas_tree(climate, _hash01(gx, gz, 72))
-				if _atlas_batched.has(atlas_id): species = atlas_id
+				if _atlas_batched.has(atlas_id):
+					species = atlas_id
 			_append_entry(collection, species, x, z, height, angle)
 			obstacles.append(Vector3(x, 0.65, z))
 	# Подлесок тоже имеет пятна: грибы под кронами, цветы на полянах,
@@ -747,7 +761,7 @@ func _make_vegetation(parent: Node3D, cell: Vector2i) -> void:
 			elif species == "plant-flattall" or species == "grass-large":
 				height *= 1.35
 			var angle := _hash01(gx, gz, 17) * TAU
-			if high_quality and not ROCK_TYPES.has(species) and _hash01(gx, gz, 73) < 0.16:
+			if high_quality and not ROCK_TYPES.has(species) and _hash01(gx, gz, 73) < 0.58:
 				var atlas_id := _atlas_undergrowth(climate, _hash01(gx, gz, 74))
 				if _atlas_batched.has(atlas_id): species = atlas_id
 			_append_entry(collection, species, x, z, height, angle)

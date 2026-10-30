@@ -373,6 +373,7 @@ func _make_residents() -> void:
 		add_child(pivot)
 		var visual: Node3D = game._model("bruno-builder",2.15,definition["color"])
 		pivot.add_child(visual)
+		visual.rotation.y = MOTION.BRUNO_VISUAL_YAW
 		_tint_clothes(visual,definition["color"])
 		var anim: AnimationPlayer = game._animation_player(visual)
 		if anim != null: MOTION.lock_horizontal_motion(anim,false)

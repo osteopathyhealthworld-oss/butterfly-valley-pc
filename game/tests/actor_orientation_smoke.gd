@@ -6,8 +6,8 @@ const ACTOR_ANIMATION = preload("res://scripts/actor_animation.gd")
 ## анимации, масштаб и математическое соответствие курса движения взгляду.
 
 const ACTORS := [
-	{"id": "Паки", "asset": "paki-hero", "height": 5.1, "front_z": 1.0, "visual_yaw": PI, "clips": ["Paki_Walking", "Paki_Fast_Run"]},
-	{"id": "Бруно", "asset": "bruno-builder", "height": 4.9, "front_z": -1.0, "visual_yaw": 0.0, "clips": ["Bruno_Idle", "Bruno_Walk", "Bruno_Woodcut", "Bruno_Plant"]}
+	{"id": "Паки", "asset": "paki-hero", "height": 5.1, "front_z": -1.0, "visual_yaw": ACTOR_ANIMATION.PAKI_VISUAL_YAW, "clips": ["Paki_Walking", "Paki_Fast_Run"]},
+	{"id": "Бруно", "asset": "bruno-builder", "height": 4.9, "front_z": 1.0, "visual_yaw": ACTOR_ANIMATION.BRUNO_VISUAL_YAW, "clips": ["Bruno_Idle", "Bruno_Walk", "Bruno_Woodcut", "Bruno_Plant"]}
 ]
 
 func _initialize() -> void:

@@ -14,7 +14,7 @@ const WELL := Vector2(13.0, 1.0)
 const PATROL := [Vector2(24.0, -28.0), Vector2(38.0, -24.0), Vector2(26.0, -35.0)]
 const CELL_SIZE := 2.0
 const BRUNO_HEIGHT := 2.6
-const BRUNO_MODEL_YAW := 0.0
+const BRUNO_MODEL_YAW := ACTOR_ANIMATION.BRUNO_VISUAL_YAW
 const ACTION_TIME := {
 	"chop": 4.4, "gather": 2.4, "deposit": 1.1,
 	"rest": 8.0, "plant": 5.5, "water": 3.5, "refill": 2.0
@@ -103,7 +103,7 @@ func _ready() -> void:
 	position = Vector3(float(pos["x"]), 0.0, float(pos["z"]))
 	_update_height()
 	visual = _create_model("bruno-builder", BRUNO_HEIGHT)
-	visual.rotation.y = BRUNO_MODEL_YAW # Исходная морда Бруно уже направлена по -Z.
+	visual.rotation.y = BRUNO_MODEL_YAW # Bruno's imported +Z faces forward after this offset.
 	add_child(visual)
 	animation = _find_animation(visual)
 	if animation != null:

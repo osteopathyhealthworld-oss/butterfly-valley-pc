@@ -193,7 +193,7 @@ func _make_player() -> void:
 	player.position.y = world.ground_height(player.position.x, player.position.z) + 0.12
 	player_model = _model("paki-hero", 2.4, Color("#dfbba0"))
 	player.add_child(player_model)
-	player_model.rotation.y = PI
+	player_model.rotation.y = ACTOR_ANIMATION.PAKI_VISUAL_YAW
 	player_anim = _animation_player(player_model)
 	if player_anim != null:
 		ACTOR_ANIMATION.lock_horizontal_motion(player_anim, true)
