@@ -133,12 +133,13 @@ func _make_sites() -> void:
 		if id == "stores":
 			_prop("log-stack",root,Vector3(2.4,0,2.5),1.8)
 			_barn=load("res://scripts/construction.gd").new()
+			_barn.appearance = "barn"
 			_barn.name="Общий амбар · модульная постройка"
 			_barn.position=Vector3(0,0,4)
 			_barn.rotation.y=PI
 			_barn.scale=Vector3.ONE*0.8
 			root.add_child(_barn)
-			_barn.set_stage(3)
+			_barn.set_stage(5)
 			game.world.chapter_obstacles.append(Rect2(p+Vector2(-2.7,1.5),Vector2(5.4,5.0)))
 		if id == "quarry":
 			for i in range(12):
@@ -349,9 +350,12 @@ func _animate_meadow_life(delta: float) -> void:
 		actor.position=Vector3(point.x,game.world.ground_height(point.x,point.y)+1.7+sin(t*2.5)*0.45,point.y)
 
 func _make_homes() -> void:
-	for definition in SIM.PEOPLE:
+	for home_index in range(SIM.PEOPLE.size()):
+		var definition: Dictionary = SIM.PEOPLE[home_index]
 		var p: Vector2 = definition["home"] + Vector2(0,2.9)
 		var home = load("res://scripts/construction.gd").new()
+		home.appearance = "cottage"
+		home.variant = home_index
 		home.name = "Дом: " + str(definition["name"])
 		home.position = Vector3(p.x,game.world.ground_height(p.x,p.y),p.y)
 		home.scale = Vector3.ONE*0.9

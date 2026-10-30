@@ -25,6 +25,8 @@ func _run_checks() -> void:
 	site.set_stage(3)
 	assert(site.stage_groups[3].visible)
 	assert(not site.stage_groups[4].visible)
+	assert(site._frame_visual != null)
+	assert(not site._frame_visual.visible, "Грубый деревянный каркас не должен торчать из готовых стен")
 	site.set_stage(5)
 	assert(site.stage_groups[5].visible)
 	assert(site.next_description() == "Мастерская готова")
@@ -36,6 +38,20 @@ func _run_checks() -> void:
 		assert(imported_walls == 12, "Должны загружаться 12 модульных стен")
 	if site._has_module("Roof_RoundTiles_6x6"):
 		assert(site.stage_groups[4].get_child_count() == 1, "Должна загружаться готовая черепичная крыша")
+	for style in ["cottage", "barn", "alchemist"]:
+		var house = source.new()
+		house.appearance = style
+		root.add_child(house)
+		house.set_stage(5)
+		assert(house.stage_groups[3].visible and house.stage_groups[4].visible)
+		assert(not house._frame_visual.visible)
+		if style == "cottage" and house._has_module("Roof_RoundTiles_4x4"):
+			assert(house.stage_groups[5].get_child_count() >= 1)
+		if style == "barn" and house._has_module("Roof_RoundTiles_6x4"):
+			assert((house.stage_groups[4].get_child(0) as Node3D).name == "Quaternius_Roof_RoundTiles_6x4")
+		if style == "alchemist" and house._has_module("Roof_RoundTiles_8x8"):
+			assert((house.stage_groups[4].get_child(0) as Node3D).name == "Quaternius_Roof_RoundTiles_8x8")
+		house.queue_free()
 
 	var world = load("res://scripts/world.gd").new()
 	root.add_child(world)
