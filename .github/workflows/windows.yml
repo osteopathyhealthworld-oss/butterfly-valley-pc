@@ -1,0 +1,96 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source:
+    name: Check game rules
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compile scripts and check simulation
+        shell: bash
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*.py'
+          godot --version
+          python3 game/run_godot_check.py godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
+          for check in compile_scripts_smoke chapter_simulation_smoke projects_smoke save_recovery_smoke; do
+            python3 game/run_godot_check.py godot --headless --rendering-method gl_compatibility --path game -s "res://tests/${check}.gd"
+          done
+  windows:
+    name: Export Windows and publish archive
+    needs: source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read pinned game assets
+        env:
+          VALLEY_ASSETS_TOKEN: ${{ secrets.VALLEY_ASSETS_TOKEN }}
+          VALLEY_ASSETS_MANIFEST: ${{ secrets.VALLEY_ASSETS_MANIFEST }}
+        run: python3 scripts/fetch_assets.py
+      - name: Prepare village and import resources
+        shell: bash
+        run: |
+          bash game/prepare-village-assets.sh
+          python3 scripts/validate_assets.py
+          python3 game/run_godot_check.py godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
+      - name: Check resources, actors and actual scenes
+        shell: bash
+        run: |
+          for check in compile_scripts_smoke release_quality_gate actor_orientation_smoke fauna_smoke builder_ai_smoke chapter_simulation_smoke projects_smoke save_recovery_smoke chapter_scene_smoke projects_scene_smoke; do
+            python3 game/run_godot_check.py godot --headless --rendering-method gl_compatibility --path game -s "res://tests/${check}.gd"
+          done
+      - name: Prepare export templates
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          if [ "$HOME" != /root ] && [ -d /root/.local/share/godot/export_templates/4.4.1.stable ]; then
+            cp -a /root/.local/share/godot/export_templates/4.4.1.stable "$HOME/.local/share/godot/export_templates/"
+          fi
+      - name: Export Windows x64
+        shell: bash
+        run: |
+          mkdir -p build/windows
+          python3 game/run_godot_check.py godot --headless --path game --export-release "Windows Desktop" "$GITHUB_WORKSPACE/build/windows/ButterflyValley.exe"
+          python3 scripts/package_release.py
+      - name: Keep downloadable archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ButterflyValley-Windows-${{ github.run_number }}
+          path: build/ButterflyValley-Windows.zip
+          retention-days: 3
+          if-no-files-found: error
+      - name: Publish tested desktop build
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pc-${{ github.run_number }}
+          name: Долина бабочек — ПК-сборка ${{ github.run_number }}
+          prerelease: true
+          files: build/ButterflyValley-Windows.zip
+          body: |
+            Windows x64 / Godot 4.4.1. Распакуйте архив и запустите ButterflyValley.exe.
+            Исходный коммит: ${{ github.sha }}.
+            Архив опубликован после проверки ресурсов, анимаций, правил и сцен.
+            Эти проверки не заменяют осмотр изображения, звука и FPS на компьютере.

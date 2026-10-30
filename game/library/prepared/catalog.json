@@ -1,0 +1,973 @@
+{
+  "schemaVersion": 1,
+  "created": "2026-10-29",
+  "status": "45 imported model files registered for Godot runtime preview and noninteractive placement on isolated branch",
+  "notes": [
+    "candidateActions are proposals for future behavior/interaction metadata, not implemented actions",
+    "mesh scale, materials, collision shapes, animation playback and Web compatibility must be verified in Godot",
+    "KayKit glTF files require their adjacent .bin and shared atlas PNG, committed together",
+    "GDScript registry in scripts/asset_library.gd and in-game materials showroom include all 45 models; raw sources remain opt-in downloads",
+    "noninteractive placed animals only play their clips; autonomous behavior, collisions and economy not implemented"
+  ],
+  "modelCount": 45,
+  "models": [
+    {
+      "id": "kenney.nature-kit.fence-simplehigh",
+      "file": "res://library/prepared/kenney/nature-kit/fence-simplehigh.glb",
+      "family": "Kenney",
+      "category": "building_part",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "build"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.log",
+      "file": "res://library/prepared/kenney/nature-kit/log.glb",
+      "family": "Kenney",
+      "category": "wood_resource",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.stump-rounddetailed",
+      "file": "res://library/prepared/kenney/nature-kit/stump-rounddetailed.glb",
+      "family": "Kenney",
+      "category": "wood_resource",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.crops-dirtrowend",
+      "file": "res://library/prepared/kenney/nature-kit/crops-dirtrowend.glb",
+      "family": "Kenney",
+      "category": "crop_or_soil",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "plant",
+        "water",
+        "harvest"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.crops-cornstaged",
+      "file": "res://library/prepared/kenney/nature-kit/crops-cornstaged.glb",
+      "family": "Kenney",
+      "category": "crop_or_soil",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "plant",
+        "water",
+        "harvest"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.fence-planks",
+      "file": "res://library/prepared/kenney/nature-kit/fence-planks.glb",
+      "family": "Kenney",
+      "category": "building_part",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "build"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.campfire-logs",
+      "file": "res://library/prepared/kenney/nature-kit/campfire-logs.glb",
+      "family": "Kenney",
+      "category": "wood_resource",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.nature-kit.path-stone",
+      "file": "res://library/prepared/kenney/nature-kit/path-stone.glb",
+      "family": "Kenney",
+      "category": "building_part",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "build"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.carrot",
+      "file": "res://library/prepared/kenney/food-kit/carrot.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.onion",
+      "file": "res://library/prepared/kenney/food-kit/onion.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.apple",
+      "file": "res://library/prepared/kenney/food-kit/apple.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.corn",
+      "file": "res://library/prepared/kenney/food-kit/corn.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.bread",
+      "file": "res://library/prepared/kenney/food-kit/bread.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.food-kit.tomato",
+      "file": "res://library/prepared/kenney/food-kit/tomato.glb",
+      "family": "Kenney",
+      "category": "food",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "trade",
+        "consume"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.furniture-kit.tablecross",
+      "file": "res://library/prepared/kenney/furniture-kit/tablecross.glb",
+      "family": "Kenney",
+      "category": "furniture",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "interact"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.furniture-kit.books",
+      "file": "res://library/prepared/kenney/furniture-kit/books.glb",
+      "family": "Kenney",
+      "category": "furniture",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "interact"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kenney.furniture-kit.bookcaseopenlow",
+      "file": "res://library/prepared/kenney/furniture-kit/bookcaseopenlow.glb",
+      "family": "Kenney",
+      "category": "furniture",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "place",
+        "interact"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.insect.Swallowtail",
+      "file": "res://library/prepared/gobkit/insect/Swallowtail.glb",
+      "family": "Gobkit",
+      "category": "insect",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk",
+        "groom",
+        "alert",
+        "run",
+        "crawl",
+        "jump",
+        "fly",
+        "sting",
+        "eat",
+        "threat",
+        "hit",
+        "perch",
+        "buzz",
+        "sing",
+        "carry",
+        "dart",
+        "sway",
+        "curl",
+        "pounce",
+        "flip"
+      ],
+      "candidateActions": [
+        "fly",
+        "perch",
+        "avoid_threat"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.farm.HolsteinCow",
+      "file": "res://library/prepared/gobkit/farm/HolsteinCow.glb",
+      "family": "Gobkit",
+      "category": "farm_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "graze",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.farm.HighlandCow",
+      "file": "res://library/prepared/gobkit/farm/HighlandCow.glb",
+      "family": "Gobkit",
+      "category": "farm_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "graze",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.farm.Sheep",
+      "file": "res://library/prepared/gobkit/farm/Sheep.glb",
+      "family": "Gobkit",
+      "category": "farm_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "graze",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.farm.Pig",
+      "file": "res://library/prepared/gobkit/farm/Pig.glb",
+      "family": "Gobkit",
+      "category": "farm_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "graze",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.farm.Lamb",
+      "file": "res://library/prepared/gobkit/farm/Lamb.glb",
+      "family": "Gobkit",
+      "category": "farm_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "graze",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.bird.Hummingbird",
+      "file": "res://library/prepared/gobkit/bird/Hummingbird.glb",
+      "family": "Gobkit",
+      "category": "bird",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.bird.Rooster",
+      "file": "res://library/prepared/gobkit/bird/Rooster.glb",
+      "family": "Gobkit",
+      "category": "bird",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.insect.LeafcutterAnt",
+      "file": "res://library/prepared/gobkit/insect/LeafcutterAnt.glb",
+      "family": "Gobkit",
+      "category": "insect",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk",
+        "groom",
+        "alert",
+        "run",
+        "crawl",
+        "jump",
+        "fly",
+        "sting",
+        "eat",
+        "threat",
+        "hit",
+        "perch",
+        "buzz",
+        "sing",
+        "carry",
+        "dart",
+        "sway",
+        "curl",
+        "pounce",
+        "flip"
+      ],
+      "candidateActions": [
+        "fly",
+        "perch",
+        "avoid_threat"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.insect.HawkMoth",
+      "file": "res://library/prepared/gobkit/insect/HawkMoth.glb",
+      "family": "Gobkit",
+      "category": "insect",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk",
+        "groom",
+        "alert",
+        "run",
+        "crawl",
+        "jump",
+        "fly",
+        "sting",
+        "eat",
+        "threat",
+        "hit",
+        "perch",
+        "buzz",
+        "sing",
+        "carry",
+        "dart",
+        "sway",
+        "curl",
+        "pounce",
+        "flip"
+      ],
+      "candidateActions": [
+        "fly",
+        "perch",
+        "avoid_threat"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "gobkit.forest.Tarsier",
+      "file": "res://library/prepared/gobkit/forest/Tarsier.glb",
+      "family": "Gobkit",
+      "category": "forest_animal",
+      "format": "glb",
+      "license": "CC0-1.0",
+      "dependencies": [],
+      "rigged": true,
+      "animationClips": [
+        "idle",
+        "attack",
+        "dead",
+        "walk"
+      ],
+      "candidateActions": [
+        "wander",
+        "flee"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Wood_Log_A",
+      "file": "res://library/prepared/kaykit/resource/Wood_Log_A.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Wood_Log_A.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Wood_Plank_A",
+      "file": "res://library/prepared/kaykit/resource/Wood_Plank_A.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Wood_Plank_A.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Wood_Plank_B",
+      "file": "res://library/prepared/kaykit/resource/Wood_Plank_B.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Wood_Plank_B.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Wood_Planks_Stack_Large",
+      "file": "res://library/prepared/kaykit/resource/Wood_Planks_Stack_Large.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Wood_Planks_Stack_Large.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Stone_Bricks_Stack_Large",
+      "file": "res://library/prepared/kaykit/resource/Stone_Bricks_Stack_Large.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Stone_Bricks_Stack_Large.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Iron_Bar",
+      "file": "res://library/prepared/kaykit/resource/Iron_Bar.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Iron_Bar.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Iron_Nuggets",
+      "file": "res://library/prepared/kaykit/resource/Iron_Nuggets.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Iron_Nuggets.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Containers_Crate_Medium_Wood",
+      "file": "res://library/prepared/kaykit/resource/Containers_Crate_Medium_Wood.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Containers_Crate_Medium_Wood.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Pallet_Wood",
+      "file": "res://library/prepared/kaykit/resource/Pallet_Wood.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Pallet_Wood.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.resource.Gold_Bars",
+      "file": "res://library/prepared/kaykit/resource/Gold_Bars.gltf",
+      "family": "KayKit",
+      "category": "craft_resource",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "Gold_Bars.bin",
+        "resource_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "collect",
+        "carry",
+        "store",
+        "craft",
+        "trade"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.axe",
+      "file": "res://library/prepared/kaykit/tools/axe.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "axe.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.hammer",
+      "file": "res://library/prepared/kaykit/tools/hammer.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "hammer.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.pickaxe",
+      "file": "res://library/prepared/kaykit/tools/pickaxe.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "pickaxe.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.shovel",
+      "file": "res://library/prepared/kaykit/tools/shovel.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "shovel.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.saw",
+      "file": "res://library/prepared/kaykit/tools/saw.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "saw.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.bucket_metal",
+      "file": "res://library/prepared/kaykit/tools/bucket_metal.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "bucket_metal.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    },
+    {
+      "id": "kaykit.tools.anvil",
+      "file": "res://library/prepared/kaykit/tools/anvil.gltf",
+      "family": "KayKit",
+      "category": "work_tool",
+      "format": "gltf",
+      "license": "CC0-1.0",
+      "dependencies": [
+        "anvil.bin",
+        "tools_bits_texture.png"
+      ],
+      "rigged": false,
+      "animationClips": [],
+      "candidateActions": [
+        "equip",
+        "use",
+        "store",
+        "craft"
+      ],
+      "gameplayImplemented": false
+    }
+  ]
+}

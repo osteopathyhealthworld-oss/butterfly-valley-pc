@@ -1,0 +1,389 @@
+{
+  "schema": 1,
+  "project": "Butterfly Valley / Mouse Saga",
+  "created": "2026-10-29",
+  "branch": "experiment/butterfly-asset-library-20261029",
+  "policy": "Standalone desktop project; pinned sources; automated Windows builds authorized by project owner.",
+  "profiles": {
+    "core": "download scene-compatible packs with sparse source directories",
+    "full": "download all GitHub packs including secondary styles and extra collections"
+  },
+  "sourceRepositories": [
+    {
+      "id": "kenney-1883",
+      "repository": "Hidencod/tge-assets",
+      "revision": "e26d410c77163293bcf3c07614e024552a308c69",
+      "format": "GLB",
+      "observed_models": 1883,
+      "license": "CC0-1.0 (Kenney originals)",
+      "original": "https://kenney.nl",
+      "role": "nature, food, furniture, caves, animals, props",
+      "corePaths": [
+        "packs/nature-kit",
+        "packs/food-kit",
+        "packs/furniture-kit",
+        "packs/graveyard-kit",
+        "packs/castle-kit",
+        "packs/mini-dungeon",
+        "packs/cube-pets"
+      ],
+      "profile": "core"
+    },
+    {
+      "id": "kaykit-props",
+      "repository": "GeorgeQLe/assets-kaykit-3d-props",
+      "revision": "4376b8becf4218424edaba18c0e43a5989c189f6",
+      "format": "glTF (+ bin/atlas), FBX duplicates",
+      "observed_models": 1174,
+      "license": "CC0-1.0 (original LICENSES/KayKit-CC0-License.txt)",
+      "original": "https://kaylousberg.itch.io",
+      "role": "wood, stone, tools, forge, furniture, resources, weapons",
+      "corePaths": [
+        "assets/kaykit/resource-bits-1.0",
+        "assets/kaykit/rpg-tools-bits-1.0",
+        "assets/kaykit/furniture-bits-1.0",
+        "assets/kaykit/fantasy-weapons-bits-1.0",
+        "LICENSES"
+      ],
+      "profile": "core"
+    },
+    {
+      "id": "quaternius-standard",
+      "repository": "agentkaerf/FreeModels",
+      "revision": "db3df04d1e4714298a09510b26fb6de6645138a2",
+      "format": "glTF (+ bin/texture), GLB animation",
+      "observed_models": 242,
+      "license": "CC0-1.0 (verified License_Standard.txt for selected packs)",
+      "original": "https://quaternius.com",
+      "role": "fantasy props, nature, animal animations, character outfits, rig libraries",
+      "corePaths": [
+        "Fantasy Props MegaKit[Standard]",
+        "Stylized Nature MegaKit[Standard]",
+        "Modular Character Outfits - Fantasy[Standard]",
+        "Universal Animation Library 2[Standard]",
+        "Ultimate Animated Animals - July 2021",
+        "Cute Animated Monsters - Aug 2020",
+        "Ultimate Modular Men- Feb 2022",
+        "Ultimate Modular Women - April 2022"
+      ],
+      "profile": "core"
+    },
+    {
+      "id": "medieval-village",
+      "repository": "J-Ponzo/gltf-medieval-village-megakit",
+      "revision": "21104b4045261c28fc312360841ed1a7b0ac8782",
+      "format": "glTF + bins + PBR textures",
+      "observed_models": 176,
+      "license": "CC0-1.0 (Quaternius Standard 2025)",
+      "original": "https://quaternius.itch.io/medieval-village-megakit",
+      "role": "modular workshop, house walls, roofs, doors, windows",
+      "corePaths": [
+        "glTF"
+      ],
+      "profile": "core"
+    },
+    {
+      "id": "gobkit-github",
+      "repository": "Ariescar/gobkit-free-assets",
+      "revision": "4e73c68fa6e8ca9d948fcc0ce7215c830a022c3b",
+      "format": "GLB",
+      "observed_models": 60,
+      "license": "CC0-1.0",
+      "original": "https://gobkit.com/freebies",
+      "role": "animal animations, cliffs, forest forms",
+      "corePaths": [
+        "animal",
+        "nature"
+      ],
+      "profile": "core",
+      "note": "60 models overlap part of the 295 live ZIP collection"
+    },
+    {
+      "id": "kaykit-adventurers",
+      "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+      "revision": "672074b73ba276876a19e8816ecdc5241817ab47",
+      "format": "GLB + FBX",
+      "observed_models": 5,
+      "license": "CC0-1.0",
+      "original": "https://godotengine.org/asset-library/asset/2129",
+      "role": "five humanoid animation reference characters; not anthropomorphic",
+      "corePaths": [
+        "addons/kaykit_character_pack_adventures"
+      ],
+      "profile": "core"
+    },
+    {
+      "id": "kaykit-medieval-hexagon",
+      "repository": "KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+      "revision": "84fa4e91af6a88989be7c99e0891cede11f2ca38",
+      "format": "glTF + FBX",
+      "observed_models": 200,
+      "license": "CC0-1.0",
+      "original": "https://kaylousberg.itch.io/kaykit-medieval-hexagon",
+      "role": "hex tiles, fields, farms, town props, bridges; mismatched scale with third-person world",
+      "corePaths": [
+        "."
+      ],
+      "profile": "full"
+    }
+  ],
+  "gobkit": {
+    "manifest": "https://gobkit.com/api/free",
+    "snapshotTotal": 295,
+    "archiveCount": 25,
+    "archiveBytes": 27745903,
+    "license": "CC0-1.0",
+    "archives": [
+      {
+        "name": "Minion Pack",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/gobkit-free-pack.zip",
+        "file": "gobkit-free-pack.zip",
+        "bytes": 1154245,
+        "sha256": "9c4ca70961291023c2c61f995fc200f2ab3770fb8477a160c02f16240279d64d",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.1",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal/gobkit-animal-pack.zip",
+        "file": "gobkit-animal-pack.zip",
+        "bytes": 283643,
+        "sha256": "464195cacd537c34c99dc15d6e250077975e475f22243a616caa0208b494e457",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.4",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal006/gobkit-animal006-pack.zip",
+        "file": "gobkit-animal006-pack.zip",
+        "bytes": 535967,
+        "sha256": "348c344ac76532e0e15bb8f4b05ad6e730286d48f90fe237fee758a8a398ca1e",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.5",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal007/gobkit-animal007-pack.zip",
+        "file": "gobkit-animal007-pack.zip",
+        "bytes": 538086,
+        "sha256": "c7e57148db1c9b771c2978e3fa0cbbc521bbfcb5b22861bd3740e345ee043293",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.6",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal008/gobkit-animal008-pack.zip",
+        "file": "gobkit-animal008-pack.zip",
+        "bytes": 544847,
+        "sha256": "3231d945120cd6103bb41064e0787af5b11bf7a0a0e22fe048a4afa9ba286a58",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.7",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal009/gobkit-animal009-pack.zip",
+        "file": "gobkit-animal009-pack.zip",
+        "bytes": 510749,
+        "sha256": "ba5ec5ad1c3a3476af13b20ab94da209cb75a5adde164da6b88eef5ec4f3fc55",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol. 2",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animalB/gobkit-animalB-pack.zip",
+        "file": "gobkit-animalB-pack.zip",
+        "bytes": 685104,
+        "sha256": "a5d73ab6621b7526caf16ea33f65d76a53071278be63d5bae3f68f5204a68bc5",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Bird Pack",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/birds/gobkit-birds-pack.zip",
+        "file": "gobkit-birds-pack.zip",
+        "bytes": 485964,
+        "sha256": "7cf64f45a8c155918859c207773e4b53ef99103b9c4ebd32242c8400c3903cef",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Dinosaur Pack",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/dino/gobkit-dino-pack.zip",
+        "file": "gobkit-dino-pack.zip",
+        "bytes": 815031,
+        "sha256": "b950716a36d27b10f0b1b1bb2c79251b4e406e1d230d7e73bda39a8c64156253",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Animal Pack Vol.3",
+        "count": 10,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/animal005/gobkit-farm-pack.zip",
+        "file": "gobkit-farm-pack.zip",
+        "bytes": 552648,
+        "sha256": "b0175a2ae6bd371e0e5238fe10513c501d3766bd8b351f865f1f2786f80f3896",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.1",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human001/gobkit-human001-pack.zip",
+        "file": "gobkit-human001-pack.zip",
+        "bytes": 1027121,
+        "sha256": "1801bc634c3f809f394d8fc0c001f2aaa4f29f1d0a541f6f74f7b7b2b75aec0e",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.2",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human002/gobkit-human002-pack.zip",
+        "file": "gobkit-human002-pack.zip",
+        "bytes": 1601046,
+        "sha256": "3cd3bb12433045a98ffbd3e3516d8d69dded426423fe4bd6344dc138c9a9cc4e",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.3",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human003/gobkit-human003-pack.zip",
+        "file": "gobkit-human003-pack.zip",
+        "bytes": 935714,
+        "sha256": "fa754b83eb34b9f9d8ba844e8b8cd9e235530d98909bb3906a6958c9eb346ea2",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.4",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human004/gobkit-human004-pack.zip",
+        "file": "gobkit-human004-pack.zip",
+        "bytes": 987412,
+        "sha256": "fe2e4d1efcff84ef7287d090c4b290cd6242b249b4161d0095934998fefa8e0b",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.5",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human005/gobkit-human005-pack.zip",
+        "file": "gobkit-human005-pack.zip",
+        "bytes": 976355,
+        "sha256": "e331ce4fb99520e07b066508245aaf80baf8cdb73824132bbf24415162523840",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.6",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human006/gobkit-human006-pack.zip",
+        "file": "gobkit-human006-pack.zip",
+        "bytes": 1153654,
+        "sha256": "dbdb99b66cddeb654e8a1457dd200139f0812b189094ef6be3b6050ea364e9a7",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.7",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human007/gobkit-human007-pack.zip",
+        "file": "gobkit-human007-pack.zip",
+        "bytes": 1349231,
+        "sha256": "df46ba6d171c21a5155e5814de6a760f8604dbfaf45347f512c9114106557af6",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.8",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human008/gobkit-human008-pack.zip",
+        "file": "gobkit-human008-pack.zip",
+        "bytes": 1298937,
+        "sha256": "71e935dc498964d5d8ff566f12737044e25dd8b46b09e0b4175d1eaa47ec4012",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.9",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human009/gobkit-human009-pack.zip",
+        "file": "gobkit-human009-pack.zip",
+        "bytes": 1218515,
+        "sha256": "d68fe78a36a9df907250f24eb242218c7563ad7224f714f67d1627a4557abe5d",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.10",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human010/gobkit-human010-pack.zip",
+        "file": "gobkit-human010-pack.zip",
+        "bytes": 961891,
+        "sha256": "860dfff518746e1ea7f2bcbd451b865d839910af7e9faaeca1e861aee9684b0b",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.11",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human011/gobkit-human011-pack.zip",
+        "file": "gobkit-human011-pack.zip",
+        "bytes": 1015781,
+        "sha256": "bde5256d3c7875ebac4909dad0e938bc0f5bf4f594541291be5ca46ad63a1fac",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Character Pack Vol.12",
+        "count": 8,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/human012/gobkit-human012-pack.zip",
+        "file": "gobkit-human012-pack.zip",
+        "bytes": 1264367,
+        "sha256": "a969492c0272190bb25ff627a5fee459afa41859c3a471e391bc78764b273cbe",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Insect Pack Vol.1",
+        "count": 30,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/insect001/gobkit-insect001-pack.zip",
+        "file": "gobkit-insect001-pack.zip",
+        "bytes": 2755680,
+        "sha256": "d18665b32752401d202c647dede6df7a269be75040c0c30090f9d687a34708c6",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Gobkit Free Insect Pack Vol.2",
+        "count": 30,
+        "kind": "characters",
+        "url": "https://gobkit.com/freebies/insect002/gobkit-insect002-pack.zip",
+        "file": "gobkit-insect002-pack.zip",
+        "bytes": 4521023,
+        "sha256": "0c96a6653a55264a773ac27d0f23a1d8f3b165e2e248bda669c98127e63f4acc",
+        "license": "CC0-1.0"
+      },
+      {
+        "name": "Nature Kit",
+        "count": 41,
+        "kind": "environment",
+        "url": "https://gobkit.com/freebies/environment/gobkit-nature-kit.zip",
+        "file": "gobkit-nature-kit.zip",
+        "bytes": 572892,
+        "sha256": "f0f1c39798303118f7ca49c0920884e8e2e7dc817c71cc573fdcdc4a756f53fb",
+        "license": "CC0-1.0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+# Quaternius Medieval Village MegaKit Standard, CC0 1.0
+# Source snapshot: J-Ponzo/gltf-medieval-village-megakit @ 21104b4045261c28fc312360841ed1a7b0ac8782
+# filename size_bytes
+Door_1_Flat.bin 24924
+Door_1_Flat.gltf 3895
+Floor_WoodDark.bin 2240
+Floor_WoodDark.gltf 2143
+Roof_RoundTiles_6x6.bin 167464
+Roof_RoundTiles_6x6.gltf 4343
+T_Brick_BaseColor.png 2447169
+T_Brick_Normal.png 4474267
+T_Brick_Roughness.png 689204
+T_Plaster_BaseColor.png 3316410
+T_Plaster_Normal.png 4607606
+T_Plaster_ORM.png 2381579
+T_RockTrim_BaseColor.png 1908835
+T_RockTrim_Normal.png 3925938
+T_RockTrim_ORM.png 1625807
+T_RoundTiles_BaseColor.png 4352034
+T_RoundTiles_Normal.png 3792369
+T_RoundTiles_Roughness.png 1624660
+T_WoodTrim_BaseColor.png 2082310
+T_WoodTrim_Normal.png 3596501
+T_WoodTrim_Roughness.png 1697111
+Wall_Plaster_Door_Flat.bin 6792
+Wall_Plaster_Door_Flat.gltf 5942
+Wall_Plaster_Straight.bin 5876
+Wall_Plaster_Straight.gltf 4169
+Wall_Plaster_Window_Wide_Flat.bin 5376
+Wall_Plaster_Window_Wide_Flat.gltf 5964
+Window_Wide_Flat1.bin 11104
+Window_Wide_Flat1.gltf 3516
+
