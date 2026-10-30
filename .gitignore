@@ -6,8 +6,3 @@ private-assets/
 __pycache__/
 *.pyc
 game/assets/
-game/fauna_assets/*.glb
-game/library/prepared/**/*.glb
-game/library/prepared/**/*.gltf
-game/library/prepared/**/*.bin
-game/library/prepared/**/*.png
