@@ -347,12 +347,15 @@ func _make_regional_water() -> void:
 	horizon.name = "Дальняя большая вода · Ладога"
 	add_child(horizon)
 
-func set_weather_wetness(value: float) -> void:
-	_wetness = lerpf(_wetness,value,0.007)
+func set_weather_wetness(value: float, delta: float = 0.016667) -> void:
+	var next_wetness := move_toward(_wetness, clampf(value, 0.0, 1.0), maxf(delta, 0.0) * 0.42)
+	if is_equal_approx(next_wetness, _wetness):
+		return
+	_wetness = next_wetness
 	if _grass_detailed != null:
-		_grass_detailed.set_shader_parameter("wetness",_wetness)
+		_grass_detailed.set_shader_parameter("wetness", _wetness)
 	for material in _wind_materials:
-		material.set_shader_parameter("wind_strength",lerpf(0.45,1.7,_wetness))
+		material.set_shader_parameter("wind_strength", lerpf(0.45, 1.7, _wetness))
 
 func set_quality(enabled: bool) -> void:
 	if enabled and _atlas_roots.is_empty():
@@ -947,6 +950,8 @@ func _make_world_places(parent: Node3D, cell: Vector2i) -> void:
 					var pz := center.y + sin(angle) * 6.5
 					if has_houses and i % 2 == 0:
 						var cottage = load("res://scripts/construction.gd").new()
+						cottage.appearance = "cottage"
+						cottage.variant = i + 8
 						cottage.name = "Домик Корневой слободы"
 						cottage.position = Vector3(px, ground_height(px, pz), pz)
 						cottage.rotation.y = angle + PI
