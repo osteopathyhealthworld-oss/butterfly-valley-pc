@@ -59,7 +59,7 @@ def checked_items() -> list[dict]:
             raise ValueError("Missing audio catalogue entry: " + name)
         if entry["license"] != "CC0 1.0":
             raise ValueError("Unapproved audio licence: " + name)
-        if entry["upstreamRepository"] not in PINN:
+        if entry["upstreamRepository"] not in PINNED:
             raise ValueError("Unpinned audio source: " + name)
         if not isinstance(entry["bytes"], int) or entry["bytes"] <= 0:
             raise ValueError("Invalid source byte count: " + name)
