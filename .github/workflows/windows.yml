@@ -49,6 +49,7 @@ jobs:
           godot --version
           godot --headless --rendering-method gl_compatibility --editor --path game --import --quit
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/construction_smoke.gd
+          godot --headless --rendering-method gl_compatibility --path game -s res://tests/terrain_canopy_smoke.gd
           godot --headless --rendering-method gl_compatibility --path game -s res://tests/soundscape_smoke.gd
 
 # Full Godot import and Windows export need the character models kept in the
