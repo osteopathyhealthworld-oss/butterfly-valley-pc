@@ -80,6 +80,9 @@ var camera_distance := 27.0
 var weather_mode := "auto"
 var raining := false
 var weather_elapsed := 0.0
+var _cloud_mix := 0.0
+var _sky_update_elapsed := 0.0
+var _material_update_elapsed := 0.0
 var action_time := 0.0
 var action_finish: Callable
 var action_label := ""
@@ -337,6 +340,7 @@ func _register(kind: String, pos: Vector2, extra: Dictionary = {}) -> void:
 
 func _make_workshop() -> void:
 	workshop = load("res://scripts/construction.gd").new()
+	workshop.appearance = "workshop"
 	workshop.name = "Строительная площадка Бруно"
 	var origin := Vector2(32.0, -28.0)
 	workshop.position = Vector3(origin.x, world.ground_height(origin.x, origin.y), origin.y)
@@ -362,6 +366,7 @@ func _make_landmarks() -> void:
 	# from the same textured village kit as Bruno's workshop.
 	if _village_modules_ready():
 		var house = load("res://scripts/construction.gd").new()
+		house.appearance = "alchemist"
 		house.name = "Лаборатория алхимика · Quaternius"
 		house.position = Vector3(-12.0, world.ground_height(-12.0, -17.5), -17.5)
 		house.rotation.y = PI
@@ -1452,31 +1457,52 @@ func _update_weather(delta: float) -> void:
 	elif weather_mode != "auto" and weather_mode != "chapter":
 		raining = weather_mode == "rain"
 	var night := bool(state["night"])
+	var weather := chapter.sim.weather() if chapter != null else ("storm" if raining else "clear")
+	var mist := weather == "mist"
+	var cloudy := weather in ["overcast", "storm", "mist"]
+	var cloud_target := 1.0 if weather == "storm" else (0.76 if mist else (0.58 if cloudy else 0.0))
+	# Light and cloud cover fade between weather states, rather than jumping.
+	_cloud_mix = move_toward(_cloud_mix, cloud_target, delta * 0.33)
 	night_mix = move_toward(night_mix, 1.0 if night else 0.0, delta * 0.7)
-	sun.light_energy = lerpf(1.35, 0.2, night_mix) * (0.7 if raining else 1.0)
-	environment.environment.ambient_light_energy = lerpf(0.65, 0.26, night_mix)
+	sun.light_energy = lerpf(1.35, 0.2, night_mix) * (1.0 - _cloud_mix * 0.35)
+	environment.environment.ambient_light_energy = lerpf(0.65, 0.26, night_mix) * (1.0 - _cloud_mix * 0.12)
 	environment.environment.background_color = Color("#a8c7c4").lerp(Color("#18283a"), night_mix)
 	if chapter == null:
-		environment.environment.fog_density = lerpf(0.004, 0.008, 1.0 if raining else 0.0)
-	environment.environment.fog_light_color = Color("#a7bbaa").lerp(Color("#738a95"), 0.55 if raining else night_mix * 0.5)
-	if chapter != null:
-		var mist: bool = chapter.sim.weather()=="mist"
-		var cloudy: bool = chapter.sim.weather() in ["overcast","storm"]
-		environment.environment.fog_density = lerpf(environment.environment.fog_density,0.018 if mist else (0.009 if raining else 0.003),minf(1.0,delta*0.4))
-		sun.light_color = Color("#afc5ea") if night else (Color("#e3dbc8") if cloudy else Color("#ffe3ad"))
-		sun.rotation_degrees.x = -28.0 if night else -25.0-35.0*maxf(0.0,sin((chapter.sim.hour()-6.0)/12.0*PI))
+		environment.environment.fog_density = lerpf(0.004, 0.008, _cloud_mix)
+		environment.environment.fog_light_color = Color("#a7bbaa").lerp(Color("#738a95"), maxf(_cloud_mix * 0.6, night_mix * 0.5))
+	else:
+		environment.environment.fog_density = lerpf(environment.environment.fog_density, 0.018 if mist else (0.009 if raining else (0.006 if cloudy else 0.003)), minf(1.0, delta * 0.4))
+		var desired_sun := Color("#afc5ea") if night else (Color("#d8cfc1") if cloudy else Color("#ffe3ad"))
+		sun.light_color = sun.light_color.lerp(desired_sun, minf(1.0, delta * 1.25))
+		sun.rotation_degrees.x = -28.0 if night else -25.0 - 35.0 * maxf(0.0, sin((chapter.sim.hour() - 6.0) / 12.0 * PI))
+		_material_update_elapsed += delta
+		if _material_update_elapsed >= 0.12:
+			world.set_weather_wetness(1.0 if raining else 0.0, _material_update_elapsed)
+			_material_update_elapsed = 0.0
+		if raining:
+			for plot in state["garden"]:
+				if int(plot.get("plantedAt", 0)) > 0 and int(plot.get("wateredAt", 0)) <= 0:
+					plot["wateredAt"] = Time.get_unix_time_from_system()
+	# Rebuilding procedural sky radiance every physics tick is very costly.
+	# Five small, conditional changes per second preserve a smooth transition.
+	_sky_update_elapsed += delta
+	if _sky_update_elapsed >= 0.20:
+		_sky_update_elapsed = 0.0
 		if environment.environment.sky != null:
 			var sky_material := environment.environment.sky.sky_material as ProceduralSkyMaterial
 			if sky_material != null:
-				sky_material.sky_top_color = Color("#748794") if cloudy else Color("#6c9dbb").lerp(Color("#111c33"),night_mix)
-				sky_material.sky_horizon_color = Color("#abb8af").lerp(Color("#273648"),night_mix)
+				var top := Color("#6c9dbb").lerp(Color("#748794"), _cloud_mix)
+				top = top.lerp(Color("#111c33"), night_mix)
+				var horizon := Color("#d9d8b9").lerp(Color("#abb8af"), _cloud_mix)
+				horizon = horizon.lerp(Color("#273648"), night_mix)
+				if sky_material.sky_top_color != top:
+					sky_material.sky_top_color = top
+				if sky_material.sky_horizon_color != horizon:
+					sky_material.sky_horizon_color = horizon
+		environment.environment.ambient_light_color = Color("#c8cfb7").lerp(Color("#a6b4c8"), _cloud_mix * 0.60)
 		if _is_forward_plus():
-			environment.environment.volumetric_fog_density = 0.022 if mist else (0.011 if raining else 0.006)
-		world.set_weather_wetness(1.0 if raining else 0.0)
-		if raining:
-			for plot in state["garden"]:
-				if int(plot.get("plantedAt",0))>0 and int(plot.get("wateredAt",0))<=0:
-					plot["wateredAt"] = Time.get_unix_time_from_system()
+			var fog_target := 0.022 if mist else (0.011 if raining else (0.008 if cloudy else 0.006))
+			environment.environment.volumetric_fog_density = lerpf(environment.environment.volumetric_fog_density, fog_target, 0.22)
 
 func _configure_starting_quality() -> void:
 	# Windows desktop builds start with a full forest, animated wildlife and shadows.
@@ -1485,6 +1511,10 @@ func _configure_starting_quality() -> void:
 		return
 	if OS.get_cmdline_user_args().has("--safe-graphics"):
 		quality_button.text = "Графика: экономная"
+		if _is_forward_plus():
+			environment.environment.ssao_enabled = false
+			environment.environment.volumetric_fog_enabled = false
+			environment.environment.glow_enabled = false
 		return
 	world.set_quality(true)
 	fauna.set_detailed(true)
@@ -1503,6 +1533,7 @@ func _toggle_quality() -> void:
 	if _is_forward_plus():
 		environment.environment.ssao_enabled = world.high_quality
 		environment.environment.volumetric_fog_enabled = world.high_quality
+		environment.environment.glow_enabled = world.high_quality
 	if rain_particles != null:
 		rain_particles.amount = 220 if world.high_quality else 100
 	_toast("Режим графики изменён. Лес подгрузится заново.")
