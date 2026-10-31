@@ -8,11 +8,16 @@ const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
 const HOUSE_SPOT := Vector2(27.0, -17.0)
 const WELL_SPOT := Vector2(25.0, -4.0)
+const BUILD_TAG := "FR-2026-10-31-R3"
 
 @onready var terrain: Node3D = $Terrain
 @onready var fly_camera: Camera3D = $FlyCamera
 var _fps_label: Label
 var _fps_elapsed := 0.0
+var _diagnostics_label: Label
+var _diagnostic_ground_enabled := false
+var _normal_ground_material: Material
+var _diagnostic_ground_material: StandardMaterial3D
 
 func _ready() -> void:
 	_configure_stable_rendering()
@@ -60,6 +65,54 @@ func _configure_stable_rendering() -> void:
 	ground.set_shader_parameter("ground_texture",
 		load("res://textures/Ground020_1K-JPG/Ground020_1K_Color.jpg"))
 	terrain.set("terrain_material", ground)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not (event is InputEventKey):
+		return
+	if not event.pressed or event.echo:
+		return
+	var key: int = event.physical_keycode
+	match key:
+		KEY_F1:
+			var river := get_node_or_null("AnimatedRiver") as MeshInstance3D
+			if river != null:
+				river.visible = not river.visible
+		KEY_F2:
+			var show_trees: bool = not $Trees.visible
+			for biome_name in ["Trees", "Plants", "Plants2"]:
+				(get_node(biome_name) as Node3D).visible = show_trees
+		KEY_F3:
+			_toggle_diagnostic_ground()
+		_:
+			return
+	_update_diagnostics_label()
+	get_viewport().set_input_as_handled()
+
+
+func _toggle_diagnostic_ground() -> void:
+	var ground_mesh := terrain.get_node_or_null("__terrain_mesh") as MeshInstance3D
+	if ground_mesh == null:
+		return
+	if _normal_ground_material == null:
+		_normal_ground_material = ground_mesh.material_override
+	if _diagnostic_ground_material == null:
+		_diagnostic_ground_material = StandardMaterial3D.new()
+		_diagnostic_ground_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_diagnostic_ground_material.albedo_color = Color(0.94, 0.28, 0.14)
+		_diagnostic_ground_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_diagnostic_ground_enabled = not _diagnostic_ground_enabled
+	ground_mesh.material_override = _diagnostic_ground_material if _diagnostic_ground_enabled else _normal_ground_material
+
+
+func _update_diagnostics_label() -> void:
+	if _diagnostics_label == null:
+		return
+	var river := get_node_or_null("AnimatedRiver") as MeshInstance3D
+	var water_status := "ВКЛ" if river == null or river.visible else "ВЫКЛ"
+	var trees_status := "ВКЛ" if $Trees.visible else "ВЫКЛ"
+	var ground_status := "ОТЛАДКА" if _diagnostic_ground_enabled else "ТЕКСТУРА"
+	_diagnostics_label.text = "%s  |  F1: вода %s  |  F2: лес %s  |  F3: земля %s" % [BUILD_TAG, water_status, trees_status, ground_status]
+
 
 func _process(delta: float) -> void:
 	_fps_elapsed += delta
@@ -244,3 +297,13 @@ func _add_hud() -> void:
 	_fps_label.add_theme_font_size_override("font_size", 14)
 	_fps_label.add_theme_color_override("font_color", Color(0.80, 0.94, 0.85))
 	layer.add_child(_fps_label)
+	_diagnostics_label = Label.new()
+	_diagnostics_label.name = "Diagnostics"
+	_diagnostics_label.position = Vector2(22.0, 72.0)
+	_diagnostics_label.add_theme_font_size_override("font_size", 14)
+	_diagnostics_label.add_theme_color_override("font_color", Color(0.96, 0.90, 0.67))
+	_diagnostics_label.add_theme_color_override("font_shadow_color", Color(0.02, 0.06, 0.05, 0.96))
+	_diagnostics_label.add_theme_constant_override("shadow_offset_x", 1)
+	_diagnostics_label.add_theme_constant_override("shadow_offset_y", 2)
+	layer.add_child(_diagnostics_label)
+	_update_diagnostics_label()

@@ -37,7 +37,7 @@ func _run() -> void:
 		return
 	var start: Vector3 = camera.global_position
 	var land: float = terrain.call("_sample_height", start.x, start.z)
-	if start.y < land + 5.0:
+	if start.y < land + 5.0 or start.y < 25.0:
 		push_error("Free-fly camera spawned too low or under terrain")
 		quit(14)
 		return
@@ -77,6 +77,21 @@ func _run() -> void:
 	if ground_material == null or ground_material.shader == null:
 		push_error("Stable opaque terrain material is missing")
 		quit(21)
+		return
+	var diagnostics := instance.get_node_or_null("RiverDemoHUD/Diagnostics") as Label
+	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R3"):
+		push_error("Demo lacks visible build identification; old executable cannot be distinguished")
+		quit(30)
+		return
+	instance.call("_toggle_diagnostic_ground")
+	if ground_mesh.material_override == ground_material:
+		push_error("Diagnostic terrain material does not replace the textured ground")
+		quit(31)
+		return
+	instance.call("_toggle_diagnostic_ground")
+	if ground_mesh.material_override != ground_material:
+		push_error("Diagnostic terrain material cannot be restored")
+		quit(32)
 		return
 	var vertex_data: PackedVector3Array = ground_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	if vertex_data.size() < 10000:

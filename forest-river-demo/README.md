@@ -14,6 +14,8 @@ For attribution, see [CREDITS.md](CREDITS.md).
 3. Fly with **WASD**, rise with **Space**, descend with **C**, hold **Shift** for faster travel.
 4. Look around with the mouse. Press **Esc** to release the cursor, click to recapture it.
 5. Press **R** to return to the aerial starting viewpoint.
+6. Confirm **FR-2026-10-31-R3** in the overlay. If absent, you launched an older copy.
+7. If terrain looks wrong, press **F1** to hide/show water, **F2** to hide/show vegetation, and **F3** to switch terrain to a bright orange unlit diagnostic material. Take screenshots before and after toggling; press the same key again to restore the normal view.
 
 The scene starts above the riverbank with the landscape in view; the inspection
 camera has no gravity. Flight is limited to the terrain area and stays above
