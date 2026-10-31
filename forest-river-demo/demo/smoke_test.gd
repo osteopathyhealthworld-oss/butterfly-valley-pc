@@ -144,7 +144,7 @@ func _run() -> void:
 		return
 	var tree_mask: Image = trees.mask_texture.get_image()
 	for location in [Vector2(27.0, -17.0), Vector2(25.0, -4.0), Vector2(RiverTerrainScript.center_at(0.0), 0.0)]:
-		var uv: Vector2 = Vector2(location.x / 100.0 + 0.5, location.y / 100.0 + 0.5)
+		var uv: Vector2 = Vector2(location.x / trees.area_size.x + 0.5, location.y / trees.area_size.y + 0.5)
 		var px := clampi(int(uv.x * tree_mask.get_width()), 0, tree_mask.get_width() - 1)
 		var py := clampi(int(uv.y * tree_mask.get_height()), 0, tree_mask.get_height() - 1)
 		if tree_mask.get_pixel(px, py).r < 0.98:
