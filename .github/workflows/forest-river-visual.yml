@@ -23,7 +23,12 @@ jobs:
         run: python3 forest-river-demo/scripts/assemble.py --output "$RUNNER_TEMP/ForestRiverDemo"
       - name: Import all models and textures
         run: godot --headless --editor --path "$RUNNER_TEMP/ForestRiverDemo" --import --quit
-      - name: Check actual rendered terrain pixels
+      - name: Check rendered terrain pixels (OpenGL compatibility)
         run: |
           command -v xvfb-run
           LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s "-screen 0 960x540x24" godot --rendering-method gl_compatibility --resolution 960x540 --path "$RUNNER_TEMP/ForestRiverDemo" --script res://demo/render_probe.gd
+      - name: Check rendered terrain pixels (Forward+ Vulkan)
+        continue-on-error: true
+        timeout-minutes: 7
+        run: |
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s "-screen 0 960x540x24" godot --rendering-method forward_plus --resolution 960x540 --path "$RUNNER_TEMP/ForestRiverDemo" --script res://demo/render_probe.gd
