@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Спрайтовая анимация · Лаборатория абсурда</title>
+<meta name="theme-color" content="#122922">
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#0e211c;color:#eff9f0;font-family:system-ui,sans-serif}
+main{max-width:1050px;margin:auto;padding:14px 12px 28px}
+a{color:#a9eebf}h1{font-size:clamp(23px,4vw,33px);margin:8px 0}.ey{color:#9ec8a7;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+p{line-height:1.4;margin:8px 0 12px;color:#cfddcd;font-size:13px}
+nav{display:flex;justify-content:space-between;align-items:center}
+section{position:relative;border-radius:16px;overflow:hidden;border:1px solid #85b89a;box-shadow:0 8px 34px #0007}
+canvas#game{display:block;width:100%;aspect-ratio:16/9;touch-action:none}
+.indicator{position:absolute;top:12px;left:12px;border-radius:9px;background:#09221edb;padding:8px 11px;font-size:12px;border:1px solid #c0efd166;max-width:85%}
+.indicator b{display:block}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:13px 0}
+button{min-height:70px;border:1px solid #b2e7c185;background:#2b5745;color:#f5fff6;border-radius:13px;font-size:23px;font-weight:800;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 4px #0a1d16}
+button small{font-weight:500;font-size:12px;display:block}button.down{transform:translateY(3px);background:#488c67;box-shadow:0 1px #0a1d16}
+article{background:#183b2e;border:1px solid #6d9c7d;border-radius:12px;padding:10px 14px}
+article p{margin:3px 0}
+details{margin:12px 0;border:1px solid #406c51;padding:10px;border-radius:12px}
+#sheet{display:block;max-width:100%;width:100%;background:repeating-conic-gradient(#385648 0 25%,#284536 0 50%) 0 0/24px 24px}
+footer{font-size:11px;color:#aabfb1;margin-top:16px}
+@media(max-width:640px){canvas#game{aspect-ratio:5/6}.controls{gap:6px}button{min-height:77px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script></head>
+<body><main>
+<nav><span class="ey">VesninMed · Эксперимент</span><a href="https://vesninmed.ru/lab/">← В лабораторию</a></nav>
+<h1>Спрайтовая анимация 2D</h1>
+<p><b>Проба технологии для «Долины бабочек».</b> Эта первая страница показывает настоящие кадры из анимированной 3D-модели. Пока использована свободная тестовая лиса, поскольку исходные модели Бруно и Паки ещё предстоит обработать; это не изображение наших героев.</p>
+<section><canvas id="game" width="960" height="540"></canvas><div class="indicator"><b id="state">Создаём спрайты…</b><span id="state2">Первый запуск требует интернета</span></div></section>
+<div class="controls">
+<button data-key="ArrowLeft" aria-label="Бежать влево">←<small>Влево</small></button>
+<button data-key="ArrowRight" aria-label="Бежать вправо">→<small>Вправо</small></button>
+<button data-key="Space" aria-label="Прыжок">↑<small>Пробел</small></button>
+<button data-key="KeyC" aria-label="Наклон">↓<small>C</small></button>
+</div>
+<article><p>На телефоне удерживай кнопки. На компьютере используй стрелки, пробел и C. Бег и прыжок можно совмещать. После подготовки спрайтов трёхмерная модель больше не рисуется.</p><p id="stats">Ожидание…</p></article>
+<details><summary>Показать спрайтовые кадры</summary><canvas id="sheet" width="1920" height="160"></canvas></details>
+<footer>Тестовая анимация: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Fox">Khronos Fox</a> (PixelMannen, tomkranis, AsoboStudio, scurest; CC BY 4.0). Прыжок и наклон здесь сделаны средствами 2D. Это техническая демонстрация, не готовый игровой персонаж.</footer>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const cv=document.querySelector('#game'),ctx=cv.getContext('2d'),stats=document.querySelector('#stats');
+const pressed={ArrowLeft:false,ArrowRight:false,Space:false,KeyC:false};
+let actor={x:0,dir:1,jump:0,vz:0,frames:{},ready:false};
+function setKey(k,on){if(!(k in pressed))return;if(k==='Space'&&on&&!pressed.Space&&actor.jump===0)actor.vz=570;pressed[k]=on;}
+document.addEventListener('keydown',e=>{if(e.code in pressed){e.preventDefault();setKey(e.code,true)}});
+document.addEventListener('keyup',e=>{if(e.code in pressed){e.preventDefault();setKey(e.code,false)}});
+window.addEventListener('blur',()=>Object.keys(pressed).forEach(k=>pressed[k]=false));
+document.querySelectorAll('button[data-key]').forEach(b=>{const k=b.dataset.key;
+b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);b.classList.add('down');setKey(k,true)});
+for(const t of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(t,()=>{b.classList.remove('down');setKey(k,false)});
+});
+let prev=performance.now(),step=0;
+function resize(){let r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);cv.width=Math.max(1,Math.round(r.width*d));cv.height=Math.max(1,Math.round(r.height*d));actor.x=actor.x||cv.width*.5;}
+new ResizeObserver(resize).observe(cv);resize();
+function render(now){const dt=Math.min(.04,(now-prev)/1000);prev=now;const w=cv.width,h=cv.height;
+const grad=ctx.createLinearGradient(0,0,0,h);grad.addColorStop(0,'#9ed3be');grad.addColorStop(.46,'#b7d89a');grad.addColorStop(.75,'#6d9b6a');grad.addColorStop(1,'#316b51');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+function hill(y,col,phase){ctx.beginPath();ctx.moveTo(0,h);for(let x=0;x<=w;x+=10)ctx.lineTo(x,y+Math.sin(x/w*7+phase)*h*.055+Math.sin(x/w*23+phase)*h*.013);ctx.lineTo(w,h);ctx.fillStyle=col;ctx.fill();}
+hill(h*.53,'#77a68b',1);hill(h*.67,'#50836a',2.6);hill(h*.81,'#4b8657',1.7);
+const m=(pressed.ArrowLeft?-1:0)+(pressed.ArrowRight?1:0);if(m){actor.dir=m;actor.x=Math.max(45,Math.min(w-45,actor.x+m*w*.33*dt));}
+if(actor.vz||actor.jump>0){actor.jump+=actor.vz*dt;actor.vz-=1450*dt;if(actor.jump<=0){actor.jump=0;actor.vz=0}}
+const size=Math.min(h*.45,w*.35,250),ground=h*.81;
+ctx.fillStyle='#173e3270';ctx.beginPath();ctx.ellipse(actor.x,ground,size*.27*(1-Math.min(.5,actor.jump/300)),size*.07,0,0,Math.PI*2);ctx.fill();
+const crouch=pressed.KeyC&&actor.jump===0;const s=actor.frames[m?'run':'idle']||actor.frames.run;
+if(s){let f=Math.floor(now/1000*s.fps)%s.count;ctx.save();ctx.translate(actor.x,ground-actor.jump);ctx.scale(actor.dir,1);if(crouch){ctx.translate(0,size*.13);ctx.scale(1,.70)}ctx.drawImage(s.image,f*160,0,160,160,-size*.5,-size*.95,size,size);ctx.restore();}
+else{ctx.fillStyle='#bd8148';ctx.beginPath();ctx.ellipse(actor.x,ground-size*.4-actor.jump,size*.25,size*.2,0,0,Math.PI*2);ctx.fill();}
+if(Math.floor(now/750)!==step){step=Math.floor(now/750);stats.textContent=(actor.ready?'2D-спрайты готовы':'Сборка кадров…')+' · '+(m?'бег':'ожидание')+(actor.jump?' · прыжок':'')+(crouch?' · наклон':'');}
+requestAnimationFrame(render)}requestAnimationFrame(render);
+async function bake(){let off=document.createElement('canvas');off.width=160;off.height=160;off.style.cssText='position:absolute;left:-9999px;top:-9999px';document.body.appendChild(off);let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:off,alpha:true,antialias:true,preserveDrawingBuffer:true,powerPreference:'low-power'});renderer.setSize(160,160,false);renderer.setClearColor(0x000000,0);renderer.outputColorSpace=THREE.SRGBColorSpace;
+let scene=new THREE.Scene();scene.add(new THREE.HemisphereLight(0xffffff,0x798670,2));let sun=new THREE.DirectionalLight(0xfff1d8,2.0);sun.position.set(3,8,6);scene.add(sun);
+let gltf=await new GLTFLoader().loadAsync('https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Fox/glTF-Binary/Fox.glb');
+let model=gltf.scene;scene.add(model);let bbox=new THREE.Box3().setFromObject(model),sz=new THREE.Vector3(),center=new THREE.Vector3();bbox.getSize(sz);bbox.getCenter(center);model.position.sub(center);model.position.y+=sz.y*.5;
+const span=Math.max(sz.x,sz.y,sz.z)*1.65,cam=new THREE.OrthographicCamera(-span/2,span/2,span/2,-span/2,.01,10000);cam.position.set(sz.x*3+1,sz.y+1,sz.z*.5+1);cam.lookAt(0,sz.y*.43,0);
+let mixer=new THREE.AnimationMixer(model);
+for(const [name,n,fps] of [['run',12,12],['idle',6,6]]){let clip=gltf.animations.find(a=>a.name.toLowerCase().includes(name==='run'?'run':'survey'));if(!clip)throw new Error('Нет анимации '+name);mixer.stopAllAction();mixer.clipAction(clip).reset().play();let sheet=document.createElement('canvas');sheet.width=n*160;sheet.height=160;let sc=sheet.getContext('2d');for(let i=0;i<n;i++){mixer.setTime((i+.2)*clip.duration/n);renderer.render(scene,cam);sc.drawImage(off,i*160,0)}actor.frames[name]={image:sheet,count:n,fps};}
+let preview=document.querySelector('#sheet');preview.width=actor.frames.run.image.width;preview.height=160;preview.getContext('2d').drawImage(actor.frames.run.image,0,0);
+actor.ready=true;document.querySelector('#state').textContent='Готово: 2D-анимация';document.querySelector('#state2').textContent='Движение воспроизводится из спрайтов';}
+catch(e){console.error(e);document.querySelector('#state').textContent='Не удалось вывести кадры';document.querySelector('#state2').textContent='Проверь соединение с интернетом';stats.textContent=String(e.message||e)}
+finally{if(renderer){renderer.dispose();renderer.forceContextLoss()}off.remove()}}
+bake();
+</script></body></html>
