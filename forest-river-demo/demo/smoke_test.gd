@@ -30,6 +30,38 @@ func _run() -> void:
 		push_error("River terrain is missing")
 		quit(4)
 		return
+	var camera := instance.get_node_or_null("FlyCamera") as Camera3D
+	if camera == null or not camera.current or instance.get_node_or_null("UP_FPSController_Prefab") != null:
+		push_error("Demo must use only the free-fly camera, not the gravity-based player")
+		quit(13)
+		return
+	var start: Vector3 = camera.global_position
+	var land: float = terrain.call("_sample_height", start.x, start.z)
+	if start.y < land + 5.0:
+		push_error("Free-fly camera spawned too low or under terrain")
+		quit(14)
+		return
+	await create_timer(0.25).timeout
+	if absf(camera.global_position.y - start.y) > 0.01:
+		push_error("Camera drifts vertically without movement input")
+		quit(15)
+		return
+	camera.call("_move_from_axes", 0.0, 0.0, 1.0, 0.25, false)
+	if camera.global_position.y <= start.y + 2.0:
+		push_error("Upward fly control does not increase altitude")
+		quit(16)
+		return
+	camera.call("_move_from_axes", 0.0, 0.0, -1.0, 0.25, false)
+	if absf(camera.global_position.y - start.y) > 0.01:
+		push_error("Downward fly control does not decrease altitude")
+		quit(17)
+		return
+	camera.call("_move_from_axes", 0.0, 1.0, 0.0, 0.25, false)
+	if camera.global_position.distance_to(start) < 2.0:
+		push_error("Forward camera movement is inactive")
+		quit(18)
+		return
+	camera.call("reset_view")
 	var center: float = terrain.call("_sample_height", 0.0, 0.0)
 	var outside: float = terrain.call("_sample_height", 70.0, 0.0)
 	if center >= RiverTerrainScript.water_height_at(0.0):

@@ -11,7 +11,13 @@ For attribution, see [CREDITS.md](CREDITS.md).
 
 1. Download `ForestRiverDemo-Windows.zip` from the `Forest river demo - Windows` GitHub Actions run in this repository.
 2. Unzip it and run `ForestRiver.exe`.
-3. Walk with **WASD**, look with the **mouse**, press **Esc** to release the cursor.
+3. Fly with **WASD**, rise with **Space**, descend with **C**, hold **Shift** for faster travel.
+4. Look around with the mouse. Press **Esc** to release the cursor, click to recapture it.
+5. Press **R** to return to the aerial starting viewpoint.
+
+The scene starts above the riverbank with the landscape in view; the inspection
+camera has no gravity. Flight is limited to the terrain area and stays above
+land or water. This is an exploration camera, not a walking character.
 
 Requires Windows with a Vulkan-capable GPU. The demo uses Godot 4.6 Forward+.
 
@@ -34,6 +40,7 @@ python scripts/assemble.py --source /path/to/godot-forest-demo --output /path/to
 - `demo/RiverTerrain.gd` — river shape, depth and walkable banks.
 - `demo/ForestRiverController.gd` — water mesh, shore stones, vegetation masking and spawn.
 - `demo/river_water.gdshader` — animated flow, ripples, shallows and specular highlights.
+- `demo/FreeFlyCamera.gd` — independent free-flight controls and safe altitude.
 - `scripts/assemble.py` — pinned, reproducible demo assembly.
 
 ## Limitations

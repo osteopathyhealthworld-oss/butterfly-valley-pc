@@ -39,6 +39,25 @@ def assemble(source: Path, output: Path) -> None:
     scene = (output / "levels/test_biomes.tscn").read_text(encoding="utf-8")
     scene = scene.replace('res://levels/test_biomes.gd', 'res://demo/ForestRiverController.gd')
     scene = scene.replace('res://scenery/TerrainPatch3D.gd', 'res://demo/RiverTerrain.gd')
+    # The stock FPS character has gravity, respawning, head bob and kill
+    # volumes. Replace it with a genuinely gravity-free showcase camera.
+    for obsolete_node in ("UP_FPSController_Prefab", "MouseCapture"):
+        pattern = r'^\[node name="' + obsolete_node + r'"[^\n]*\n(?:[^\[]*\n)*'
+        scene, count = re.subn(pattern, '', scene, flags=re.M)
+        if count != 1:
+            raise ValueError(f"Expected exactly one {obsolete_node} scene node, got {count}")
+    scene = re.sub(
+        r'^\[ext_resource[^\n]*(?:UP_FPSController_Prefab.tscn|UP_MouseCapture.gd)[^\n]*\n',
+        '', scene, flags=re.M)
+    old_target = 'sample_target_path = NodePath("../UP_FPSController_Prefab")'
+    if old_target not in scene:
+        raise ValueError("Could not locate fog's old player target")
+    scene = scene.replace(old_target, 'sample_target_path = NodePath("../FlyCamera")')
+    camera_resource = '[ext_resource type="Script" path="res://demo/FreeFlyCamera.gd" id="99_freefly"]\n'
+    scene = scene.replace('[sub_resource', camera_resource + '[sub_resource', 1)
+    scene += ('\n[node name="FlyCamera" type="Camera3D" parent="."]\n'
+              'current = true\nfov = 70.0\nfar = 600.0\n'
+              'script = ExtResource("99_freefly")\n')
     # Resource UIDs from the original scripts otherwise take precedence over
     # the new path and silently reload the old scripts.
     scene = re.sub(r'(\[ext_resource type="Script") uid="uid://[^"]+"(?= path="res://demo/)',

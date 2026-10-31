@@ -17,6 +17,9 @@ Tested with Godot 4.6 stable (Linux, headless):
   than unique trees); the player area generated 6,657 grass blades.
 - Grass generation performed on a background thread, with every checked
   blade matching the modified terrain height within 1 millimeter.
+- Free-fly camera is the sole player viewpoint; it starts above the terrain,
+  remains stationary without input, and responds to simulated forward, upward
+  and downward movement. Its lower bound follows land or water height.
 - Game data exported as a `.pck`, and that `.pck` started independently from
   the original Godot project using an identical-version engine executable.
 - Both downloadable ZIP archives tested for compressed-file integrity.
@@ -28,7 +31,7 @@ Tested with Godot 4.6 stable (Linux, headless):
   tests. Compare screenshots from the user's PC to the intended art direction.
 - **Performance:** record FPS and frametimes on the target PC at the starting
   point, riverside and deep forest. Headless results are not a GPU benchmark.
-- **Movement and collisions:** walk the banks in all directions, inspect any
+- **Movement and collisions:** fly at different heights in all directions, inspect any
   floating/penetrating props or plants, and verify cursor capture/unlock.
 - **Water realism:** there is no true planar reflection or physical fluid
   simulation. Water shading is a stylistic first pass.

@@ -9,7 +9,7 @@ const HOUSE_SPOT := Vector2(27.0, -17.0)
 const WELL_SPOT := Vector2(25.0, -4.0)
 
 @onready var terrain: Node3D = $Terrain
-@onready var player: Node3D = $UP_FPSController_Prefab
+@onready var fly_camera: Camera3D = $FlyCamera
 var _fps_label: Label
 var _fps_elapsed := 0.0
 
@@ -18,7 +18,7 @@ func _ready() -> void:
 	_build_river()
 	_build_shore_details()
 	_position_props()
-	_position_player()
+	_position_camera()
 	_add_hud()
 	if $WorldEnvironment.environment != null:
 		$WorldEnvironment.environment.volumetric_fog_enabled = true
@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 	_fps_elapsed += delta
 	if _fps_label != null and _fps_elapsed > 0.6:
 		_fps_elapsed = 0.0
-		_fps_label.text = "FPS: %d  |  Forward+ / PBR / Volumetric fog" % Engine.get_frames_per_second()
+		_fps_label.text = "FPS: %d  |  Высота: %.1f м  |  Forward+ / PBR" % [Engine.get_frames_per_second(), fly_camera.global_position.y]
 
 
 func _river_distance(x: float, z: float) -> float:
@@ -162,12 +162,14 @@ func _build_shore_details() -> void:
 	add_child(stones)
 
 
-func _position_player() -> void:
-	var x: float = 18.0
-	var z: float = 6.0
+func _position_camera() -> void:
+	# Start high enough to see the river and canopy, oriented toward
+	# the river from the eastern bank. No falling or character physics.
+	var x: float = 21.0
+	var z: float = 8.0
 	var ground: float = terrain.call("_sample_height", x, z)
-	player.position = Vector3(x, ground + 2.5, z)
-	player.rotation.y = PI * 0.5
+	fly_camera.call("configure", terrain, Vector3(x, ground + 19.0, z),
+			PI * 0.5, deg_to_rad(-27.0))
 
 
 func _position_props() -> void:
@@ -192,9 +194,9 @@ func _add_hud() -> void:
 	add_child(layer)
 	var label := Label.new()
 	label.name = "Controls"
-	label.text = "FOREST & RIVER  |  WASD — движение  |  мышь — обзор  |  ESC — курсор"
+	label.text = "FOREST & RIVER  |  WASD — полёт  |  ПРОБЕЛ — вверх  |  C — вниз  |  SHIFT — быстро  |  ESC — мышь"
 	label.position = Vector2(22.0, 18.0)
-	label.add_theme_font_size_override("font_size", 15)
+	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", Color(0.88, 0.96, 0.88))
 	label.add_theme_color_override("font_shadow_color", Color(0.02, 0.06, 0.05, 0.9))
 	label.add_theme_constant_override("shadow_offset_x", 1)
