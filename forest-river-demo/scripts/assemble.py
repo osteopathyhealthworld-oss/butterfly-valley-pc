@@ -70,6 +70,17 @@ def assemble(source: Path, output: Path) -> None:
     scene = re.sub(r'^\[node name="CanvasLayer"[^\n]*\n', '', scene, flags=re.M)
     scene = scene.replace('subdivisions_x = 160', 'subdivisions_x = 256')
     scene = scene.replace('subdivisions_z = 160', 'subdivisions_z = 256')
+    # Eliminate billboard swaps and rapidly varying density LOD that popped
+    # between frames; spread fewer full tree meshes over more terrain.
+    scene, removed = re.subn(r'^billboard_scene = ExtResource\("[^"]+"\)\n', '', scene, flags=re.M)
+    if removed < 4:
+        raise ValueError("Expected forest and plant billboard references")
+    scene = scene.replace('density_lod_enabled = true', 'density_lod_enabled = false')
+    original_trees = 'seed = 7\narea_size = Vector2(100, 100)\naverage_spacing = 1.9'
+    replacement_trees = 'seed = 7\narea_size = Vector2(155, 155)\naverage_spacing = 3.4'
+    if original_trees not in scene:
+        raise ValueError("Could not locate tree density settings")
+    scene = scene.replace(original_trees, replacement_trees)
     scene = re.sub(r'^\[gd_scene[^\n]*', '[gd_scene format=3]', scene, count=1, flags=re.M)
     (output / "levels/forest_river_demo.tscn").write_text(scene, encoding="utf-8")
     # This duplicate original scene still refers to the intentionally removed

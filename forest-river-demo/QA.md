@@ -9,6 +9,8 @@ Tested with Godot 4.6 stable (Linux, headless):
 - Import of all project assets and scripts.
 - Instantiation of the complete main scene.
 - River mesh generated (11,520 vertices) and shoreline stones (440 instances).
+- Explicitly verify a visible terrain MeshInstance3D, an opaque terrain shader, a meaningful height range and riverbank heights above the water along five cross sections.
+- Disable adaptive exposure, the temporal compositor, volumetric fog, SDFGI and bloom; verify stable tree meshes without density/billboard swaps.
 - Riverbed height strictly below the water surface.
 - The old cottage and well relocated outside the riverbank footprint.
 - Tree masks exclude the river, cottage and well areas.

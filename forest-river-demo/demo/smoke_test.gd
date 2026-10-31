@@ -62,6 +62,59 @@ func _run() -> void:
 		quit(18)
 		return
 	camera.call("reset_view")
+	# The old smoke test checked terrain sampling but never checked whether
+	# an actual visible ground mesh and opaque material existed.
+	var ground_mesh := terrain.get_node_or_null("__terrain_mesh") as MeshInstance3D
+	if ground_mesh == null or ground_mesh.mesh == null or ground_mesh.mesh.get_surface_count() == 0:
+		push_error("No visible terrain mesh exists")
+		quit(19)
+		return
+	if not ground_mesh.visible:
+		push_error("Terrain mesh is invisible")
+		quit(20)
+		return
+	var ground_material := ground_mesh.material_override as ShaderMaterial
+	if ground_material == null or ground_material.shader == null:
+		push_error("Stable opaque terrain material is missing")
+		quit(21)
+		return
+	var vertex_data: PackedVector3Array = ground_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	if vertex_data.size() < 10000:
+		push_error("Terrain does not contain the expected 3D topology")
+		quit(22)
+		return
+	var low := INF
+	var high := -INF
+	for point in vertex_data:
+		low = minf(low, point.y)
+		high = maxf(high, point.y)
+	if high - low < 6.0:
+		push_error("Terrain relief is nearly flat")
+		quit(23)
+		return
+	for z in [-72.0, -36.0, 0.0, 36.0, 72.0]:
+		var cx: float = RiverTerrainScript.center_at(z)
+		var level: float = RiverTerrainScript.water_height_at(z)
+		var bed: float = terrain.call("_sample_height", cx, z)
+		var dry_bank: float = terrain.call("_sample_height", cx + RiverTerrainScript.BANK_OUTER + 3.0, z)
+		if bed > level - 0.4 or dry_bank < level + 1.5:
+			push_error("River bed/banks violate water-level geometry")
+			quit(24)
+			return
+	var world := instance.get_node("WorldEnvironment") as WorldEnvironment
+	if world.camera_attributes != null or world.compositor != null:
+		push_error("Adaptive exposure or temporal compositor is still active")
+		quit(25)
+		return
+	if world.environment.volumetric_fog_enabled or world.environment.glow_enabled or world.environment.sdfgi_enabled:
+		push_error("High-cost unstable rendering effects are still enabled")
+		quit(26)
+		return
+	var water := river.material_override as ShaderMaterial
+	if water == null or water.shader == null or "ALPHA =" in water.shader.code or "depth_draw_never" in water.shader.code.split("//")[0]:
+		push_error("River must be opaque and write depth")
+		quit(27)
+		return
 	var center: float = terrain.call("_sample_height", 0.0, 0.0)
 	var outside: float = terrain.call("_sample_height", 70.0, 0.0)
 	if center >= RiverTerrainScript.water_height_at(0.0):
@@ -75,6 +128,15 @@ func _run() -> void:
 			quit(6)
 			return
 	var trees := instance.get_node("Trees")
+	if trees.density_lod_enabled:
+		push_error("Trees must not change density with the camera")
+		quit(28)
+		return
+	for entry in trees.entries:
+		if entry.billboard_scene != null or entry.billboard_mesh != null:
+			push_error("Tree billboard switching has not been disabled")
+			quit(29)
+			return
 	var tree_mesh_instances := _count_multimesh_instances(trees)
 	if tree_mesh_instances < 100:
 		push_error("Forest vegetation failed to populate: only %d mesh instances" % tree_mesh_instances)

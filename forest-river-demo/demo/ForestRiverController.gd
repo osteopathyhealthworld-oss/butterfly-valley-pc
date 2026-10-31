@@ -2,6 +2,7 @@ extends Node3D
 
 const RiverTerrainScript = preload("res://demo/RiverTerrain.gd")
 const WaterShader = preload("res://demo/river_water.gdshader")
+const GroundShader = preload("res://demo/ground_stable.gdshader")
 const WATER_LENGTH := 196.0
 const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
@@ -14,15 +15,51 @@ var _fps_label: Label
 var _fps_elapsed := 0.0
 
 func _ready() -> void:
+	_configure_stable_rendering()
 	_install_river_masks()
 	_build_river()
 	_build_shore_details()
 	_position_props()
 	_position_camera()
 	_add_hud()
-	if $WorldEnvironment.environment != null:
-		$WorldEnvironment.environment.volumetric_fog_enabled = true
+	# All lighting is configured once, without temporal brightness changes.
 
+
+func _configure_stable_rendering() -> void:
+	# The original used strong fog, automatic exposure, volumetric temporal
+	# history, SDFGI, bloom and custom sun shafts. These made the surface
+	# difficult to see and introduced brightness/temporal instability.
+	var world: WorldEnvironment = $WorldEnvironment
+	var env: Environment = world.environment.duplicate(true)
+	env.fog_enabled = true
+	env.fog_density = 0.004
+	env.fog_sky_affect = 0.03
+	env.volumetric_fog_enabled = false
+	env.sdfgi_enabled = false
+	env.ssil_enabled = false
+	env.glow_enabled = false
+	env.ssao_enabled = true
+	env.adjustment_enabled = false
+	env.ambient_light_energy = 1.10
+	env.background_energy_multiplier = 0.85
+	env.tonemap_exposure = 0.85
+	world.environment = env
+	world.camera_attributes = null
+	world.compositor = null
+	$SunShaftsController.process_mode = Node.PROCESS_MODE_DISABLED
+	$AutoBiomesFog.process_mode = Node.PROCESS_MODE_DISABLED
+	var sun: DirectionalLight3D = $DirectionalLight3D
+	sun.light_energy = 1.10
+	sun.directional_shadow_max_distance = 95.0
+	sun.light_angular_distance = 1.0
+
+	# Replace the 32-layer parallax/50x UV ground material with an opaque,
+	# stable PBR surface: actual hills plus texturing and sandy banks.
+	var ground := ShaderMaterial.new()
+	ground.shader = GroundShader
+	ground.set_shader_parameter("ground_texture",
+		load("res://textures/Ground020_1K-JPG/Ground020_1K_Color.jpg"))
+	terrain.set("terrain_material", ground)
 
 func _process(delta: float) -> void:
 	_fps_elapsed += delta
@@ -120,7 +157,7 @@ func _add_water_triangle(tool: SurfaceTool, za: float, ua: float, zb: float, ub:
 
 
 func _add_water_vertex(tool: SurfaceTool, z: float, u: float) -> void:
-	var width: float = RiverTerrainScript.RIVER_HALF_WIDTH - 0.32 + 0.30 * sin(z * 0.16)
+	var width: float = RiverTerrainScript.RIVER_HALF_WIDTH - 0.38 + 0.18 * sin(z * 0.11)
 	var center: float = RiverTerrainScript.center_at(z)
 	var x: float = center + (u * 2.0 - 1.0) * width
 	var y: float = RiverTerrainScript.water_height_at(z) + 0.11
@@ -147,10 +184,10 @@ func _build_shore_details() -> void:
 	for i in range(multi.instance_count):
 		var z: float = rng.randf_range(-91.0, 91.0)
 		var side: float = -1.0 if i % 2 == 0 else 1.0
-		var shore_offset: float = rng.randf_range(4.2, 13.0)
+		var shore_offset: float = rng.randf_range(5.1, 15.0)
 		var x: float = RiverTerrainScript.center_at(z) + shore_offset * side
-		var y: float = RiverTerrainScript.water_height_at(z) - 0.08
-		if shore_offset > 5.3:
+		var y: float = RiverTerrainScript.water_height_at(z) - 0.10
+		if shore_offset > 6.0:
 			y = terrain.call("_sample_height", x, z)
 		var scale: float = rng.randf_range(0.10, 0.42)
 		var basis: Basis = Basis.IDENTITY.rotated(Vector3.UP, rng.randf_range(0.0, TAU))
@@ -165,10 +202,10 @@ func _build_shore_details() -> void:
 func _position_camera() -> void:
 	# Start high enough to see the river and canopy, oriented toward
 	# the river from the eastern bank. No falling or character physics.
-	var x: float = 21.0
-	var z: float = 8.0
+	var x: float = 29.0
+	var z: float = 11.0
 	var ground: float = terrain.call("_sample_height", x, z)
-	fly_camera.call("configure", terrain, Vector3(x, ground + 19.0, z),
+	fly_camera.call("configure", terrain, Vector3(x, ground + 21.0, z),
 			PI * 0.5, deg_to_rad(-27.0))
 
 

@@ -1,6 +1,6 @@
 # Forest & River — Godot 4.6 graphics showcase
 
-Standalone, explorable 3D forest with a winding river, carved walkable banks,
+Standalone, explorable 3D forest with a meandering low-lying river, visible rolling terrain and sandy banks,
 animated water, realistic trees, PBR terrain, grass, sunlight shafts, fog,
 shadows and forest vegetation.
 
@@ -37,7 +37,8 @@ python scripts/assemble.py --source /path/to/godot-forest-demo --output /path/to
 
 ## Files to edit
 
-- `demo/RiverTerrain.gd` — river shape, depth and walkable banks.
+- `demo/RiverTerrain.gd` — unified upland/riverbed height function for mesh, collision and grass.
+- `demo/ground_stable.gdshader` — solid textured earth with sandy riverbanks.
 - `demo/ForestRiverController.gd` — water mesh, shore stones, vegetation masking and spawn.
 - `demo/river_water.gdshader` — animated flow, ripples, shallows and specular highlights.
 - `demo/FreeFlyCamera.gd` — independent free-flight controls and safe altitude.
@@ -45,5 +46,5 @@ python scripts/assemble.py --source /path/to/godot-forest-demo --output /path/to
 
 ## Limitations
 
-- High tree density, volumetric fog and sunlight shafts can tax integrated GPUs.
+- The showcase defaults to stable daylight: no automatic exposure, heavy volumetric fog, SDFGI, bloom or custom sunlight shafts. This reduces visual fluctuations and GPU load.
 - This is a graphics showcase, not a river physics simulation. No buoyancy or true planar reflection yet.
