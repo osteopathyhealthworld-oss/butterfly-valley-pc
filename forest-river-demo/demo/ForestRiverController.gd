@@ -8,7 +8,7 @@ const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
 const HOUSE_SPOT := Vector2(27.0, -17.0)
 const WELL_SPOT := Vector2(25.0, -4.0)
-const BUILD_TAG := "FR-2026-10-31-R4"
+const BUILD_TAG := "FR-2026-10-31-R5"
 
 @onready var terrain: Node3D = $Terrain
 @onready var fly_camera: Camera3D = $FlyCamera
@@ -35,7 +35,7 @@ func _configure_stable_rendering() -> void:
 	# history, SDFGI, bloom and custom sun shafts. These made the surface
 	# difficult to see and introduced brightness/temporal instability.
 	var world: WorldEnvironment = $WorldEnvironment
-	var env: Environment = world.environment.duplicate(true)
+	var env := Environment.new()
 	# The upstream layered sky shader fails to compile on OpenGL 4.6
 	# (TIME is undeclared in the generated GLES3 shader). Use Godot's
 	# built-in, non-animated daytime sky on both renderers.
@@ -51,7 +51,7 @@ func _configure_stable_rendering() -> void:
 	stable_sky.sky_material = sky_material
 	env.sky = stable_sky
 	env.background_mode = Environment.BG_SKY
-	env.fog_enabled = true
+	env.fog_enabled = false
 	env.fog_density = 0.004
 	env.fog_sky_affect = 0.03
 	env.volumetric_fog_enabled = false
@@ -60,14 +60,15 @@ func _configure_stable_rendering() -> void:
 	env.glow_enabled = false
 	env.ssao_enabled = true
 	env.adjustment_enabled = false
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.88, 0.87, 0.81)
+	env.tonemap_mode = Environment.TONE_MAPPER_AGX
 	env.ambient_light_energy = 1.10
 	env.background_energy_multiplier = 0.85
 	env.tonemap_exposure = 0.85
 	world.environment = env
 	world.camera_attributes = null
 	world.compositor = null
-	$SunShaftsController.process_mode = Node.PROCESS_MODE_DISABLED
-	$AutoBiomesFog.process_mode = Node.PROCESS_MODE_DISABLED
 	var sun: DirectionalLight3D = $DirectionalLight3D
 	sun.light_energy = 1.10
 	sun.directional_shadow_max_distance = 95.0

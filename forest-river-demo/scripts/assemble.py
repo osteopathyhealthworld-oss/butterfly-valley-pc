@@ -41,7 +41,7 @@ def assemble(source: Path, output: Path) -> None:
     scene = scene.replace('res://scenery/TerrainPatch3D.gd', 'res://demo/RiverTerrain.gd')
     # The stock FPS character has gravity, respawning, head bob and kill
     # volumes. Replace it with a genuinely gravity-free showcase camera.
-    for obsolete_node in ("UP_FPSController_Prefab", "MouseCapture"):
+    for obsolete_node in ("UP_FPSController_Prefab", "MouseCapture", "AutoBiomesFog", "SunShaftsController"):
         pattern = r'^\[node name="' + obsolete_node + r'"[^\n]*\n(?:[^\[]*\n)*'
         scene, count = re.subn(pattern, '', scene, flags=re.M)
         if count != 1:
@@ -49,10 +49,30 @@ def assemble(source: Path, output: Path) -> None:
     scene = re.sub(
         r'^\[ext_resource[^\n]*(?:UP_FPSController_Prefab.tscn|UP_MouseCapture.gd)[^\n]*\n',
         '', scene, flags=re.M)
-    old_target = 'sample_target_path = NodePath("../UP_FPSController_Prefab")'
-    if old_target not in scene:
-        raise ValueError("Could not locate fog's old player target")
-    scene = scene.replace(old_target, 'sample_target_path = NodePath("../FlyCamera")')
+    # Do not instantiate any legacy animated fog, auto exposure or sun
+    # compositor. Turning these effects off in _ready() was too late:
+    # their resources had already been loaded and compiled by the renderer.
+    for legacy_resource in (
+        "res://materials/environment.tres",
+        "res://addons/gnd_biomes/AutoBiomesFog.gd",
+        "res://scenery/SunShaftsController.gd",
+        "res://scenery/SunShaftsCompositorEffect.gd",
+        "res://textures/Ground020_1K-JPG/M_ground.tres",
+    ):
+        scene = re.sub(r'^\[ext_resource[^\n]*path="' + re.escape(legacy_resource) +
+                       r'"[^\n]*\n', '', scene, flags=re.M)
+    scene = re.sub(
+        r'^(?:environment = ExtResource\("2_0f0wj"\)|'
+        r'camera_attributes = SubResource\("CameraAttributesPractical_ffumx"\)|'
+        r'compositor = SubResource\("Compositor_ym8rc"\)|'
+        r'terrain_material = ExtResource\("25_0f0wj"\))\n',
+        '', scene, flags=re.M)
+    scene, removed_legacy_effects = re.subn(
+        r'^\[sub_resource type="CameraAttributesPractical"[^\n]*\n.*?'
+        r'(?=^\[sub_resource type="Resource")',
+        '', scene, flags=re.M | re.S)
+    if removed_legacy_effects != 1:
+        raise ValueError("Could not remove legacy exposure and compositor resources")
     camera_resource = '[ext_resource type="Script" path="res://demo/FreeFlyCamera.gd" id="99_freefly"]\n'
     scene = scene.replace('[sub_resource', camera_resource + '[sub_resource', 1)
     scene += ('\n[node name="FlyCamera" type="Camera3D" parent="."]\n'

@@ -79,7 +79,7 @@ func _run() -> void:
 		quit(21)
 		return
 	var diagnostics := instance.get_node_or_null("RiverDemoHUD/Diagnostics") as Label
-	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R4"):
+	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R5"):
 		push_error("Demo lacks visible build identification; old executable cannot be distinguished")
 		quit(30)
 		return
@@ -116,6 +116,11 @@ func _run() -> void:
 			push_error("River bed/banks violate water-level geometry")
 			quit(24)
 			return
+	var source_scene := FileAccess.get_file_as_string("res://levels/forest_river_demo.tscn")
+	if source_scene.contains("materials/environment.tres") or instance.get_node_or_null("AutoBiomesFog") != null or instance.get_node_or_null("SunShaftsController") != null:
+		push_error("Legacy fog, sky or compositor still present during scene instantiation")
+		quit(34)
+		return
 	var world := instance.get_node("WorldEnvironment") as WorldEnvironment
 	if world.environment.sky == null or not (world.environment.sky.sky_material is ProceduralSkyMaterial):
 		push_error("Old animated sky shader is still active; use a stable built-in sky")
@@ -125,7 +130,7 @@ func _run() -> void:
 		push_error("Adaptive exposure or temporal compositor is still active")
 		quit(25)
 		return
-	if world.environment.volumetric_fog_enabled or world.environment.glow_enabled or world.environment.sdfgi_enabled:
+	if world.environment.fog_enabled or world.environment.volumetric_fog_enabled or world.environment.glow_enabled or world.environment.sdfgi_enabled:
 		push_error("High-cost unstable rendering effects are still enabled")
 		quit(26)
 		return
