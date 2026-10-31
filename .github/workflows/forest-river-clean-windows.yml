@@ -1,0 +1,58 @@
+name: Forest river CLEAN - Windows
+
+on:
+  push:
+    branches: [feature/forest-river-clean]
+    paths:
+      - 'forest-river-clean/**'
+      - '.github/workflows/forest-river-clean-windows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.6.0
+          use-dotnet: false
+          include-templates: true
+      - name: Assemble a clean project from licensed assets
+        run: python3 forest-river-clean/scripts/assemble.py --output "$RUNNER_TEMP/ForestRiverClean"
+      - name: Import glTF trees and native textures
+        run: godot --headless --editor --path "$RUNNER_TEMP/ForestRiverClean" --import --quit
+      - name: Geometry, native material, tree and camera checks
+        run: godot --headless --path "$RUNNER_TEMP/ForestRiverClean" --script res://SmokeTest.gd
+      - name: Visual ground-pixel test with software OpenGL
+        run: |
+          CLEAN_PREVIEW_OUTPUT="$GITHUB_WORKSPACE/ForestRiverClean-Preview.png" \
+            LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a -s "-screen 0 960x540x24" \
+            godot --rendering-method gl_compatibility --resolution 960x540 \
+            --path "$RUNNER_TEMP/ForestRiverClean" --script res://RenderProbe.gd
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ForestRiverClean-Preview
+          path: ForestRiverClean-Preview.png
+          if-no-files-found: error
+      - name: Export Windows x64
+        run: |
+          mkdir -p "$RUNNER_TEMP/ForestRiverClean/build"
+          godot --headless --path "$RUNNER_TEMP/ForestRiverClean" --export-release "Windows Desktop" "$RUNNER_TEMP/ForestRiverClean/build/ForestRiverClean.exe"
+      - name: Package independent Windows demo
+        run: |
+          cp forest-river-clean/godot/Start-Vulkan.cmd "$RUNNER_TEMP/ForestRiverClean/build/"
+          cp forest-river-clean/godot/Start-OpenGL.cmd "$RUNNER_TEMP/ForestRiverClean/build/"
+          cp forest-river-clean/README.md "$RUNNER_TEMP/ForestRiverClean/build/README.md"
+          cd "$RUNNER_TEMP/ForestRiverClean/build"
+          zip -9 -r "$GITHUB_WORKSPACE/ForestRiverClean-Windows.zip" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ForestRiverClean-Windows
+          path: ForestRiverClean-Windows.zip
+          retention-days: 30
+          if-no-files-found: error
