@@ -8,7 +8,7 @@ const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
 const HOUSE_SPOT := Vector2(27.0, -17.0)
 const WELL_SPOT := Vector2(25.0, -4.0)
-const BUILD_TAG := "FR-2026-10-31-R3"
+const BUILD_TAG := "FR-2026-10-31-R4"
 
 @onready var terrain: Node3D = $Terrain
 @onready var fly_camera: Camera3D = $FlyCamera
@@ -36,6 +36,21 @@ func _configure_stable_rendering() -> void:
 	# difficult to see and introduced brightness/temporal instability.
 	var world: WorldEnvironment = $WorldEnvironment
 	var env: Environment = world.environment.duplicate(true)
+	# The upstream layered sky shader fails to compile on OpenGL 4.6
+	# (TIME is undeclared in the generated GLES3 shader). Use Godot's
+	# built-in, non-animated daytime sky on both renderers.
+	var sky_material := ProceduralSkyMaterial.new()
+	sky_material.sky_top_color = Color(0.28, 0.47, 0.69)
+	sky_material.sky_horizon_color = Color(0.72, 0.81, 0.86)
+	sky_material.ground_horizon_color = Color(0.63, 0.67, 0.65)
+	sky_material.ground_bottom_color = Color(0.33, 0.37, 0.33)
+	sky_material.sky_curve = 0.18
+	sky_material.sun_angle_max = 15.0
+	sky_material.use_debanding = true
+	var stable_sky := Sky.new()
+	stable_sky.sky_material = sky_material
+	env.sky = stable_sky
+	env.background_mode = Environment.BG_SKY
 	env.fog_enabled = true
 	env.fog_density = 0.004
 	env.fog_sky_affect = 0.03

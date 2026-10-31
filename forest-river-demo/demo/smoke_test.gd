@@ -79,7 +79,7 @@ func _run() -> void:
 		quit(21)
 		return
 	var diagnostics := instance.get_node_or_null("RiverDemoHUD/Diagnostics") as Label
-	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R3"):
+	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R4"):
 		push_error("Demo lacks visible build identification; old executable cannot be distinguished")
 		quit(30)
 		return
@@ -117,6 +117,10 @@ func _run() -> void:
 			quit(24)
 			return
 	var world := instance.get_node("WorldEnvironment") as WorldEnvironment
+	if world.environment.sky == null or not (world.environment.sky.sky_material is ProceduralSkyMaterial):
+		push_error("Old animated sky shader is still active; use a stable built-in sky")
+		quit(33)
+		return
 	if world.camera_attributes != null or world.compositor != null:
 		push_error("Adaptive exposure or temporal compositor is still active")
 		quit(25)

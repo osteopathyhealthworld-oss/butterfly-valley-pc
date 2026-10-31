@@ -5,7 +5,7 @@ on:
     branches:
       - feature/forest-river-demo
     paths:
-      - 'forest-river-demo/demo/render_probe.gd'
+      - 'forest-river-demo/demo/**'
       - '.github/workflows/forest-river-visual.yml'
   workflow_dispatch:
 
