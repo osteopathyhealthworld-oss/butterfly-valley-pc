@@ -2,13 +2,12 @@ extends Node3D
 
 const RiverTerrainScript = preload("res://demo/RiverTerrain.gd")
 const WaterShader = preload("res://demo/river_water.gdshader")
-const GroundShader = preload("res://demo/ground_stable.gdshader")
 const WATER_LENGTH := 196.0
 const WATER_SEGMENTS := 240
 const WATER_CROSS_SEGMENTS := 8
 const HOUSE_SPOT := Vector2(27.0, -17.0)
 const WELL_SPOT := Vector2(25.0, -4.0)
-const BUILD_TAG := "FR-2026-10-31-R5"
+const BUILD_TAG := "FR-2026-10-31-R6"
 
 @onready var terrain: Node3D = $Terrain
 @onready var fly_camera: Camera3D = $FlyCamera
@@ -74,12 +73,18 @@ func _configure_stable_rendering() -> void:
 	sun.directional_shadow_max_distance = 95.0
 	sun.light_angular_distance = 1.0
 
-	# Replace the 32-layer parallax/50x UV ground material with an opaque,
-	# stable PBR surface: actual hills plus texturing and sandy banks.
-	var ground := ShaderMaterial.new()
-	ground.shader = GroundShader
-	ground.set_shader_parameter("ground_texture",
-		load("res://textures/Ground020_1K-JPG/Ground020_1K_Color.jpg"))
+	# Use Godot's native material on both Vulkan and OpenGL.
+	# Shader compilation failures previously left white, untextured ground.
+	var ground := StandardMaterial3D.new()
+	ground.albedo_texture = load("res://textures/Ground020_1K-JPG/Ground020_1K_Color.jpg")
+	ground.vertex_color_use_as_albedo = true
+	ground.albedo_color = Color.WHITE
+	ground.roughness = 0.94
+	ground.metallic = 0.0
+	ground.cull_mode = BaseMaterial3D.CULL_DISABLED
+	ground.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	ground.texture_repeat = true
+	ground.uv1_scale = Vector3(12.0, 12.0, 12.0)
 	terrain.set("terrain_material", ground)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -134,7 +139,7 @@ func _process(delta: float) -> void:
 	_fps_elapsed += delta
 	if _fps_label != null and _fps_elapsed > 0.6:
 		_fps_elapsed = 0.0
-		_fps_label.text = "FPS: %d  |  Высота: %.1f м  |  Forward+ / PBR" % [Engine.get_frames_per_second(), fly_camera.global_position.y]
+		_fps_label.text = "FPS: %d  |  Высота: %.1f м  |  %s" % [Engine.get_frames_per_second(), fly_camera.global_position.y, RenderingServer.get_current_rendering_method()]
 
 
 func _river_distance(x: float, z: float) -> float:

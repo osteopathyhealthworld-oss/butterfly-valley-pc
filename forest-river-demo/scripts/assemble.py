@@ -35,6 +35,16 @@ def assemble(source: Path, output: Path) -> None:
     if music.exists():
         shutil.rmtree(music)
     shutil.copytree(HERE / "demo", output / "demo", dirs_exist_ok=True)
+    # Upstream foliage displaces tree branches by metres (global wind=4.0).
+    # Keep the original assets, but clamp their animation to a gentle breeze.
+    wind_shader_path = output / "materials/tree_wind.gdshader"
+    wind_shader = wind_shader_path.read_text(encoding="utf-8")
+    old_wind_bend = "float bend = mix(trunk_strength, strength, height_factor) * sway;"
+    if old_wind_bend not in wind_shader:
+        raise ValueError("Original tree wind shader expression changed")
+    wind_shader = wind_shader.replace(old_wind_bend,
+        "float bend = mix(min(trunk_strength, 0.025), min(strength, 0.08), height_factor) * sway;")
+    wind_shader_path.write_text(wind_shader, encoding="utf-8")
 
     scene = (output / "levels/test_biomes.tscn").read_text(encoding="utf-8")
     scene = scene.replace('res://levels/test_biomes.gd', 'res://demo/ForestRiverController.gd')
@@ -113,6 +123,16 @@ def assemble(source: Path, output: Path) -> None:
     project = re.sub(r'run/main_scene="[^"]+"', 'run/main_scene="res://levels/forest_river_demo.tscn"', project)
     project = project.replace('rendering_device/driver.windows="d3d12"',
                               'rendering_device/driver.windows="vulkan"')
+    project, wind_count = re.subn(
+        r'(gnd_wind_strength=\{\s*"type": "float",\s*"value": )4\.0',
+        r'\g<1>0.16', project)
+    if wind_count != 1:
+        raise ValueError("Could not locate excessive global tree wind strength")
+    project, speed_count = re.subn(
+        r'(gnd_wind_speed=\{\s*"type": "float",\s*"value": )1\.0',
+        r'\g<1>0.45', project)
+    if speed_count != 1:
+        raise ValueError("Could not locate global tree wind speed")
     # DebugMenu is an editor-oriented upstream autoload, irrelevant to this
     # playable showcase. Its UID triggered startup warnings and its overlay
     # competed with our own discreet performance display.

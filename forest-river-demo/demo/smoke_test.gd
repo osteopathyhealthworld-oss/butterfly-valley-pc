@@ -73,13 +73,13 @@ func _run() -> void:
 		push_error("Terrain mesh is invisible")
 		quit(20)
 		return
-	var ground_material := ground_mesh.material_override as ShaderMaterial
-	if ground_material == null or ground_material.shader == null:
-		push_error("Stable opaque terrain material is missing")
+	var ground_material := ground_mesh.material_override as StandardMaterial3D
+	if ground_material == null or ground_material.albedo_texture == null or not ground_material.vertex_color_use_as_albedo:
+		push_error("Native textured terrain material is missing")
 		quit(21)
 		return
 	var diagnostics := instance.get_node_or_null("RiverDemoHUD/Diagnostics") as Label
-	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R5"):
+	if diagnostics == null or not diagnostics.text.contains("FR-2026-10-31-R6"):
 		push_error("Demo lacks visible build identification; old executable cannot be distinguished")
 		quit(30)
 		return
@@ -93,7 +93,18 @@ func _run() -> void:
 		push_error("Diagnostic terrain material cannot be restored")
 		quit(32)
 		return
-	var vertex_data: PackedVector3Array = ground_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var surface_arrays: Array = ground_mesh.mesh.surface_get_arrays(0)
+	var vertex_data: PackedVector3Array = surface_arrays[Mesh.ARRAY_VERTEX]
+	var color_data: PackedColorArray = surface_arrays[Mesh.ARRAY_COLOR]
+	if color_data.size() != vertex_data.size():
+		push_error("Riverbank and upland vertex colours are missing")
+		quit(35)
+		return
+	var tree_wind_shader := load("res://materials/tree_wind.gdshader") as Shader
+	if tree_wind_shader == null or not tree_wind_shader.code.contains("min(strength, 0.08)"):
+		push_error("Excessive vegetation wind was not reduced")
+		quit(36)
+		return
 	if vertex_data.size() < 10000:
 		push_error("Terrain does not contain the expected 3D topology")
 		quit(22)

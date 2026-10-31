@@ -32,6 +32,8 @@ jobs:
           godot --headless --path "$RUNNER_TEMP/ForestRiverDemo" --export-release 'Windows Desktop' "$RUNNER_TEMP/ForestRiverDemo/build/ForestRiver.exe"
       - name: Package playable demo
         run: |
+          cp "$GITHUB_WORKSPACE/forest-river-demo/demo/Start-OpenGL.cmd" "$RUNNER_TEMP/ForestRiverDemo/build/Start-OpenGL.cmd"
+          cp "$GITHUB_WORKSPACE/forest-river-demo/demo/Start-Vulkan.cmd" "$RUNNER_TEMP/ForestRiverDemo/build/Start-Vulkan.cmd"
           cd "$RUNNER_TEMP/ForestRiverDemo/build"
           zip -9 -r "$GITHUB_WORKSPACE/ForestRiverDemo-Windows.zip" .
       - uses: actions/upload-artifact@v4

@@ -32,6 +32,29 @@ static func carve_height(x: float, z: float, original_noise_height: float) -> fl
 	var t: float = smoothstep(RIVER_HALF_WIDTH, BANK_OUTER, distance)
 	return lerpf(level + 0.56, dry_land, t) + 0.25 * sin(t * PI)
 
+
+func _generate() -> void:
+	# Preserve the upstream terrain mesh and collision generation, then add
+	# stable shoreline colours for Godot's native StandardMaterial3D.
+	super._generate()
+	var terrain_mesh := get_node_or_null("__terrain_mesh") as MeshInstance3D
+	if terrain_mesh == null or terrain_mesh.mesh == null:
+		return
+	var arrays: Array = terrain_mesh.mesh.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var colors := PackedColorArray()
+	colors.resize(vertices.size())
+	for i in range(vertices.size()):
+		var vertex: Vector3 = vertices[i]
+		var distance: float = absf(vertex.x - center_at(vertex.z))
+		var bank: float = 1.0 - smoothstep(6.0, 16.0, distance)
+		colors[i] = Color(0.58, 0.65, 0.51).lerp(Color(0.86, 0.76, 0.59), bank)
+	arrays[Mesh.ARRAY_COLOR] = colors
+	var colored_mesh := ArrayMesh.new()
+	colored_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	colored_mesh.regen_normal_maps()
+	terrain_mesh.mesh = colored_mesh
+
 func _build_grass_transforms(payload: Dictionary) -> Dictionary:
 	# The upstream grass worker samples base noise, not the carved terrain.
 	# Apply the same height function as visible geometry and collision.

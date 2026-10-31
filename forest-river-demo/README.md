@@ -10,12 +10,14 @@ For attribution, see [CREDITS.md](CREDITS.md).
 ## Play it on Windows
 
 1. Download `ForestRiverDemo-Windows.zip` from the `Forest river demo - Windows` GitHub Actions run in this repository.
-2. Unzip it and run `ForestRiver.exe`.
+2. Unzip the archive (and the ZIP inside, if present). Start **`Start-OpenGL.cmd`** first, to use the renderer whose terrain was visually verified on CI. Use **`Start-Vulkan.cmd`** to compare it with your Nvidia Vulkan driver, or launch `ForestRiver.exe` directly for the default renderer. Close the previous instance before switching renderers.
 3. Fly with **WASD**, rise with **Space**, descend with **C**, hold **Shift** for faster travel.
 4. Look around with the mouse. Press **Esc** to release the cursor, click to recapture it.
 5. Press **R** to return to the aerial starting viewpoint.
-6. Confirm **FR-2026-10-31-R5** in the overlay. If absent, you launched an older copy.
+6. Confirm **FR-2026-10-31-R6** in the overlay. If absent, you launched an older copy.
 7. If terrain looks wrong, press **F1** to hide/show water, **F2** to hide/show vegetation, and **F3** to switch terrain to a bright orange unlit diagnostic material. Take screenshots before and after toggling; press the same key again to restore the normal view.
+
+The ground now uses a native StandardMaterial3D with imported texture and vertex-colour bank blending. The original foliage shader wind (global strength 4.0) is clamped to a mild breeze. Two Windows launchers allow direct OpenGL/Vulkan comparison.
 
 The upstream layered sky was replaced with the built-in procedural daytime sky, avoiding OpenGL shader compilation errors. The original fog, automatic exposure and custom compositor are removed at assembly time (not disabled after startup), so no legacy weather resources are loaded into the running scene.
 
