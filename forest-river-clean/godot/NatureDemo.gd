@@ -193,9 +193,10 @@ func _make_water_texture() -> Texture2D:
 	var img := Image.create_empty(128, 128, false, Image.FORMAT_RGBA8)
 	for row in range(128):
 		for col in range(128):
-			var ripples := sin(row * 0.36 + sin(col * 0.13) * 2.1)
-			var tones := 0.80 + 0.11 * ripples + _rng.randf_range(-0.025, 0.025)
-			img.set_pixel(col, row, Color(0.23 * tones, 0.64 * tones, 0.70 * tones))
+			# Low-contrast texture: the previous regular zigzags looked artificial.
+			var ripples := sin(row * 0.24 + sin(col * 0.07) * 1.3)
+			var tones := 0.91 + 0.026 * ripples + _rng.randf_range(-0.012, 0.012)
+			img.set_pixel(col, row, Color(0.29 * tones, 0.55 * tones, 0.57 * tones))
 	img.generate_mipmaps()
 	return ImageTexture.create_from_image(img)
 
@@ -251,13 +252,13 @@ func _build_shore_stones() -> void:
 	pebble.radial_segments = 6
 	pebble.rings = 3
 	var stone_material := StandardMaterial3D.new()
-	stone_material.albedo_color = Color(0.53, 0.54, 0.49)
+	stone_material.albedo_color = Color(0.43, 0.45, 0.40)
 	stone_material.roughness = 1.0
 	pebble.material = stone_material
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = pebble
-	mm.instance_count = 540
+	mm.instance_count = 320
 	for i in range(mm.instance_count):
 		var z := _rng.randf_range(-HALF_SIZE + 4.0, HALF_SIZE - 4.0)
 		var side := -1.0 if i % 2 == 0 else 1.0
